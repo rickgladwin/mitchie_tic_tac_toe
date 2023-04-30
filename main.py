@@ -58,6 +58,9 @@ def print_board_simple(board):
 
 def main():
     print('starting...')
+    print('starting with an untrained opponent...')
+    # initialize opponent
+    # TODO: get sqlite models etc. set up based on notes
 
 
 if __name__ == "__main__":

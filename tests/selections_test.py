@@ -1,5 +1,4 @@
 import math
-
 from ..selections import range_starts, select_move
 
 

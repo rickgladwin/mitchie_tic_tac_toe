@@ -80,7 +80,7 @@ class TestMoveSelection:
             assert (result != 2)
 
     def test_selects_moves_with_rates_matching_weights(self):
-        test_weights = [0, 50, 50, 0, 10, 5, 60, 0]
+        test_weights = [0, 0, 50, 24, 0, 50, 0, 10, 5, 60, 0]
         results = [0] * len(test_weights)
         total_trials = 1000
         result_deviation_threshold_percent = 5
@@ -89,7 +89,7 @@ class TestMoveSelection:
         for i in range(0, total_trials):
             results[select_move(test_weights)] += 1
 
-        print(f'\ntest_weights: {test_weights}')
+        print(f'test_weights: {test_weights}')
         print(f'results:      {results}')
 
         # check that each result is within the threshold of the expected rate based on the weights

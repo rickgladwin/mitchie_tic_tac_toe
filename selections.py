@@ -82,4 +82,8 @@ def select_move(weights):
 # TODO: this algorithm could be optimized for larger n with a
 #  different search algorithm or with some pre-processing
 #  It's already optimized for this use case (n = 9) though, maybe.
-
+#  The thing is, since there's no way of knowing what the weights will be,
+#  there's no way of predicting the distribution exactly, so it's hard to know
+#  what search algorithm to use. You'd have to track what weights come in
+#  over time for each use case, and optimize _for that use case_ based on what shows up.
+#  A good candidate for AI optimization, or for data analysis.

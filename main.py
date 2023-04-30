@@ -1,7 +1,8 @@
 import sys
 
 null_board = [None for i in range(0, 10)]
-example_board = [None, None, 'X', None, 'O', 'X', None, 'O', None]
+example_board_config = [None, None, 'X', None, 'O', 'X', None, 'O', None]
+example_board_weights = [24, 2, 0, 8, 0, 0, 8, 0, 16]
 
 
 def print_board(board):
@@ -61,4 +62,4 @@ def main():
 
 if __name__ == "__main__":
     print('example board:')
-    print_board_simple(example_board)
+    print_board_simple(example_board_config)

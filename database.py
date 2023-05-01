@@ -22,12 +22,27 @@ def create_table(conn, create_table_sql):
         print(e)
 
 
+def insert_game_state(conn, game_state):
+    """
+    Add a new game_state to the game_states table
+    :param conn:
+    :param game_state:
+    :return: game_state id
+    """
+
+    config, weights, nexts = game_state
+    sql = ''' INSERT INTO game_states(config,weights,nexts)
+              VALUES(?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, game_state)
+    return cur.lastrowid
+
+
 create_game_states_table_sql = """
 CREATE TABLE IF NOT EXISTS game_states (
-    id integer PRIMARY KEY,
-    next blob, -- list of ids for possible states one play after this one
-    config blob, -- status of each space on the board, X, O, or None 
-    weights blob -- probability weighting for each space on the board
+    config blob UNIQUE PRIMARY KEY, -- status of each space on the board, X, O, or None 
+    weights blob, -- probability weighting for each space on the board
+    nexts blob -- list of ids for possible states one play after this one
 );
 """
 

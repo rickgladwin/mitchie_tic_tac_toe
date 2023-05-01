@@ -10,10 +10,20 @@ example_board_weights = [24, 2, 0, 8, 0, 0, 8, 0, 16]
 def main():
     print('starting...')
     print('starting with an untrained opponent...')
+
     # initialize opponent
     opponent_name = 'opponent_1'
     create_game_states_table(opponent_name)
-    # TODO: make sure PyCharm console is using the conda environment. The zsh prompt says 'base'
+
+    # initialize game with starting game state
+    initial_config = ['.'] * 9
+    initial_weights = [10] * 9
+    initial_next = []
+
+    # add initial game state to database
+
+
+
 
 
 if __name__ == "__main__":

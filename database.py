@@ -6,7 +6,7 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
+        # print(sqlite3.version)
     except sqlite3.Error as e:
         print(e)
 
@@ -37,7 +37,7 @@ def board_state_from_iterables(config, weights, nexts):
 
     board_state = (config_string, weights_string, nexts_string)
 
-    print(f'board_state: {board_state}')
+    # print(f'board_state: {board_state}')
 
     return board_state
 
@@ -45,8 +45,8 @@ def board_state_from_iterables(config, weights, nexts):
 def insert_board_state(conn, board_state):
     """
     Add a new board_state to the board_states table
-    :param conn:
-    :param board_state tuple of (config, weights, nexts)
+    :param conn: connection object
+    :param board_state: tuple of (config, weights, nexts)
     """
     config, weights, nexts = board_state
     sql = ''' INSERT INTO board_states(config,weights,nexts)
@@ -65,7 +65,7 @@ def insert_board_state(conn, board_state):
         print('Did you remember to convert the iterables to strings?')
     conn.commit()
 
-    print(f'cur.lastrowid: {cur.lastrowid}')
+    # print(f'cur.lastrowid: {cur.lastrowid}')
 
 
 create_board_states_table_sql = """
@@ -83,11 +83,19 @@ def create_board_states_table(opponent_name):
     conn.close()
 
 
+def forget_all_board_states(opponent_name):
+    conn = create_connection('sqlite/' + opponent_name + '.db')
+    cur = conn.cursor()
+    cur.execute('DELETE FROM board_states')
+    conn.commit()
+    conn.close()
+
+
 if __name__ == '__main__':
     # connection = create_connection('./sqlite/db_1.db')
     # create_table(connection, create_board_states_table_sql)
-    opponent_name = 'test_opponent'
-    create_board_states_table(opponent_name)
+    opp_name = 'test_opponent'
+    create_board_states_table(opp_name)
 
     # initialize game with starting game state
     initial_config = ['.'] * 9
@@ -96,7 +104,7 @@ if __name__ == '__main__':
 
     # initial_board_state = (initial_config, initial_weights, initial_next)
 
-    connection = create_connection('sqlite/' + opponent_name + '.db')
+    connection = create_connection('sqlite/' + opp_name + '.db')
 
     insert_board_state(connection, board_state_from_iterables(initial_config, initial_weights, initial_next))
 

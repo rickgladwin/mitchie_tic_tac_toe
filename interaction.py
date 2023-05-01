@@ -12,7 +12,7 @@ def print_board_simple(board):
 
     while i < 9:
         board_entry = board.pop(0)
-        if board_entry is None:
+        if board_entry is '.':
             board_entry = empty_char
         sys.stdout.write(board_entry)
         if i in space_afters:

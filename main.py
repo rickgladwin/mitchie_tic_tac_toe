@@ -5,13 +5,6 @@ from interaction import print_board_simple
 from settings import settings
 
 
-# null_board = ['.' for i in range(0, settings['init_weight'])]
-# example_board_config = ['.', '.', 'X', '.', 'O', 'X', '.', 'O', '.']
-# example_board_weights = [24, 2, 0, 8, 0, 0, 8, 0, 16]
-
-
-
-
 def main():
     print('starting...')
     print('starting with an untrained opponent...')
@@ -48,7 +41,15 @@ def main():
 
     # opponent plays first
     next_play = choose_next_play(opponent_name, opponent_char, current_board_state)
-    play(next_play, opponent_name, opponent_char, current_board_state)
+    new_board_state = play(next_play, opponent_name, opponent_char, current_board_state)
+
+    # register opponent's play in game thread
+
+    # get next board state based on play (create the db record if it doesn't exist)
+    # other player goes
+    # loop until game is over
+    # update weights based on game outcome and game thread
+
 
 
 if __name__ == "__main__":

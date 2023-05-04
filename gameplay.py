@@ -31,5 +31,12 @@ def choose_next_play(opponent_name, opponent_char, current_board_config):
 
 
 def play(placement, opponent_name, opponent_char, current_board_state):
+    """Add a new play to the game
+    :param int placement: index of the play
+    :param str opponent_name: db identifier for opponent
+    :param str opponent_char: char used by opponent
+    :param current_board_state: iterable board position statuses"""
     print(f'@@@ playing at {placement} character {opponent_char} @@@')
-    pass
+    new_board_state = list(current_board_state)
+    new_board_state[placement] = opponent_char
+    return new_board_state

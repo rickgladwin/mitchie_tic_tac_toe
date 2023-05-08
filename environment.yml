@@ -1,0 +1,28 @@
+name: ai_ml
+channels:
+  - anaconda
+  - defaults
+dependencies:
+  - attrs=22.1.0=py311hca03da5_0
+  - bzip2=1.0.8=h620ffc9_4
+  - ca-certificates=2022.4.26=hca03da5_0
+  - iniconfig=1.1.1=pyhd3eb1b0_0
+  - libffi=3.4.2=hca03da5_6
+  - ncurses=6.4=h313beb8_0
+  - openssl=1.1.1t=h1a28f6b_0
+  - packaging=23.0=py311hca03da5_0
+  - pip=23.0.1=py311hca03da5_0
+  - pluggy=1.0.0=py311hca03da5_1
+  - py=1.11.0=pyhd3eb1b0_0
+  - pytest=7.1.2=py311hca03da5_0
+  - python=3.11.3=hc0d8a6c_0
+  - readline=8.2=h1a28f6b_0
+  - setuptools=66.0.0=py311hca03da5_0
+  - sqlite=3.41.2=h80987f9_0
+  - tk=8.6.12=hb8d0fd4_0
+  - tomli=2.0.1=py311hca03da5_0
+  - tzdata=2023c=h04d1e81_0
+  - wheel=0.38.4=py311hca03da5_0
+  - xz=5.2.10=h80987f9_1
+  - zlib=1.2.13=h5a0b063_0
+prefix: /Users/rickgladwin/anaconda3/envs/ai_ml

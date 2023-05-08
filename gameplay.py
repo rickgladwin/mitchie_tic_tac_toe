@@ -43,3 +43,17 @@ def play(placement, opponent_name, opponent_char, current_board_state):
     # plays are 1-indexed, but board config is 0-indexed
     new_board_state[placement] = opponent_char
     return new_board_state
+
+
+def game_is_over(current_board_state):
+    """Check if the game is over
+    :param current_board_state: iterable board position statuses"""
+    # game is over if:
+    # - X wins
+    # - O wins
+    # - board is full
+
+# TODO: consider making a game state or gameplay state function?
+#  This would return "X wins", "Y wins", "draw", or "in progress"
+#  (matching a game state enum) and could be checked in the main loop.
+#  It's a pure function since it only checks state.

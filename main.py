@@ -12,6 +12,8 @@ def main():
     # initialize opponent
     opponent_name = 'opponent_1'
     opponent_char = 'X'
+    human_char = 'O'
+    valid_plays = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
     # reset opponent
     # forget_all_board_states(opponent_name, opponent_char)
@@ -44,12 +46,42 @@ def main():
     new_board_state = play(next_play, opponent_name, opponent_char, current_board_state)
 
     # register opponent's play in game thread
+    game_thread.append((new_board_state, opponent_name, opponent_char))
+    print(f'game thread: {game_thread}')
+    print(f'current board state:')
+    print_board_simple(new_board_state)
+
+    # human plays next
+    #  prompt for play position (rather than choose_next_play())
+    #  everything else is the same
+    input_is_valid = False
+    while not input_is_valid:
+        print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
+        player_input = input()
+        if player_input == 'Q' or player_input == 'q':
+            print('Thanks for playing!')
+            return
+        if player_input not in valid_plays:
+            print('Invalid input.')
+            continue
+        # player input is 1-indexed, but the board config is 0-indexed
+        next_play = int(player_input) - 1
+        input_is_valid = True
+
+    new_board_state = play(next_play, opponent_name, human_char, new_board_state)
+    # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
+    #  and we don't need to train the AI on *ITS* opponent's moves.
+    #  Although we could. Maybe as a next version. Let the AI learn what the human did to win.
+    game_thread.append((new_board_state, opponent_name, human_char))
 
     # get next board state based on play (create the db record if it doesn't exist)
-    # other player goes
-    # loop until game is over
-    # update weights based on game outcome and game thread
+    next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
+    new_board_state = play(next_play, opponent_name, opponent_char, new_board_state)
 
+    # TODO: game loop is AI then human (or vice versa), with db and game state updates, until there's a win or draw
+    #  (or until the human quits)
+    #  then update the weights based on the outcome and the game thread
+    #  then start a new game
 
 
 if __name__ == "__main__":

@@ -10,6 +10,8 @@ def iterable_from_weights(weights):
     return list(map(int, weights.split(',')))
 
 
+# TODO: make an equivalent function for human player, where move choice is provided rather than selected,
+#  and/or extract the check and update to the board_states table.
 def choose_next_play(opponent_name, opponent_char, current_board_config):
     # look up current board state in database
     # opponent_conn = create_connection('sqlite/' + opponent_name + '.db')
@@ -25,7 +27,7 @@ def choose_next_play(opponent_name, opponent_char, current_board_config):
     # select a next play based on the weights
     print(f'%% current board state: {current_board_state}')
     play_selection = select_move(iterable_from_weights(weights))
-    print(f'%% play selection: {play_selection}')
+    print(f'%% play selection: {play_selection + 1}')
     # return the next play (the index where the opponent will play)
     return play_selection
 
@@ -36,7 +38,8 @@ def play(placement, opponent_name, opponent_char, current_board_state):
     :param str opponent_name: db identifier for opponent
     :param str opponent_char: char used by opponent
     :param current_board_state: iterable board position statuses"""
-    print(f'@@@ playing at {placement} character {opponent_char} @@@')
+    print(f'@@@ playing at {placement + 1} character {opponent_char} @@@')
     new_board_state = list(current_board_state)
+    # plays are 1-indexed, but board config is 0-indexed
     new_board_state[placement] = opponent_char
     return new_board_state

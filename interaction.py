@@ -23,6 +23,12 @@ def print_board_simple(board):
         i = i + 1
 
 
+def print_game_thread(game_thread):
+    """Prints the history of the game to the console."""
+    for play in game_thread:
+        print(play)
+
+
 if __name__ == '__main__':
     sample_board = ['.', '.', 'X', '.', 'O', 'X', '.', 'O', '.']
     print_board_simple(sample_board)

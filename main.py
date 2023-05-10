@@ -1,7 +1,7 @@
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
     forget_all_board_states
 from gameplay import choose_next_play, play
-from interaction import print_board_simple
+from interaction import print_board_simple, print_game_thread
 from settings import settings
 
 
@@ -76,7 +76,12 @@ def main():
 
     # get next board state based on play (create the db record if it doesn't exist)
     next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
+    # TODO: this doesn't include the latest play
+    game_thread.append((new_board_state, opponent_name, opponent_char))
     new_board_state = play(next_play, opponent_name, opponent_char, new_board_state)
+
+    print_game_thread(game_thread)
+    print_board_simple(new_board_state)
 
     # TODO: game loop is AI then human (or vice versa), with db and game state updates, until there's a win or draw
     #  (or until the human quits)

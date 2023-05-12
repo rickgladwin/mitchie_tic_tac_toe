@@ -54,6 +54,8 @@ def main():
     # human plays next
     #  prompt for play position (rather than choose_next_play())
     #  everything else is the same
+    # TODO: update valid_plays to exclude plays that have already been made
+    #  based on new_board_state
     input_is_valid = False
     while not input_is_valid:
         print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')

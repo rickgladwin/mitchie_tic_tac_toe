@@ -12,6 +12,8 @@ def iterable_from_weights(weights):
 
 # TODO: make an equivalent function for human player, where move choice is provided rather than selected,
 #  and/or extract the check and update to the board_states table.
+# TODO: ensure current_board_config is updated before choosing the play (ensure that the weight for any played
+#  position is updated to 0)
 def choose_next_play(opponent_name, opponent_char, current_board_config):
     # look up current board state in database
     # opponent_conn = create_connection('sqlite/' + opponent_name + '.db')

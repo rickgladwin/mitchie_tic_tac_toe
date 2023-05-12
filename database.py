@@ -78,7 +78,10 @@ def insert_fresh_board_state(opponent_name, opponent_char, config):
     :param config: iterable board position statuses
     """
     config_string = config_from_iterable(config)
-    initial_weights = weights_from_iterable([settings['init_weight']] * 9)
+    # TODO: set weight to 0 for any played space in the config
+    # default_weights = [settings['init_weight']] * 9
+    state_weights = map(lambda x: 0 if x != '.' else settings['init_weight'], config)
+    initial_weights = weights_from_iterable(state_weights)
     initial_next = nexts_from_iterable([])
     board_state = (config_string, initial_weights, initial_next)
 

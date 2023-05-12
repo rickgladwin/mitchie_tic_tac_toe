@@ -88,6 +88,48 @@ def main():
     #  then update the weights based on the outcome and the game thread
     #  then start a new game
 
+    game_is_over = False
+
+    new_board_state = current_board_state
+
+    while not game_is_over:
+        # opponent plays first
+        next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
+        new_board_state = play(next_play, opponent_name, opponent_char, new_board_state)
+
+        # register opponent's play in game thread
+        game_thread.append((new_board_state, opponent_name, opponent_char))
+        print(f'game thread: {game_thread}')
+        print(f'current board state:')
+        print_board_simple(new_board_state)
+
+        # check for win or draw
+
+        # human plays next
+        #  prompt for play position (rather than choose_next_play())
+        #  everything else is the same
+        input_is_valid = False
+        while not input_is_valid:
+            print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
+            player_input = input()
+            if player_input == 'Q' or player_input == 'q':
+                print('Thanks for playing!')
+                return
+            if player_input not in valid_plays:
+                print('Invalid input.')
+                continue
+            # player input is 1-indexed, but the board config is 0-indexed
+            next_play = int(player_input) - 1
+            input_is_valid = True
+
+        new_board_state = play(next_play, opponent_name, human_char, new_board_state)
+        # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
+        #  and we don't need to train the AI on *ITS* opponent's moves.
+        #  Although we could. Maybe as a next version. Let the AI learn what the human did to win.
+        game_thread.append((new_board_state, opponent_name, human_char))
+
+        # check for a win or draw
+
 
 if __name__ == "__main__":
     # print('example board:')

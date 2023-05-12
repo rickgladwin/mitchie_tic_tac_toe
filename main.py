@@ -57,6 +57,9 @@ def main():
     # TODO: update valid_plays to exclude plays that have already been made
     #  based on new_board_state
     input_is_valid = False
+    # TODO: the previous play is lost after the first human round. print_board_simple() shows a blank space
+    #  where the previous play was. But the game thread still has the previous play.
+    #  Further rounds are okay.
     while not input_is_valid:
         print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
         player_input = input()
@@ -96,6 +99,7 @@ def main():
 
     while not game_is_over:
         # opponent plays first
+        # TODO: sometimes the AI plays a position that's already been played
         next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
         new_board_state = play(next_play, opponent_name, opponent_char, new_board_state)
 

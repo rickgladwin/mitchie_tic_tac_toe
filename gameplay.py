@@ -1,5 +1,6 @@
 from database import create_connection, select_board_state, insert_fresh_board_state
 from selections import select_move
+from settings import settings
 
 
 def iterable_from_config(config):
@@ -97,7 +98,7 @@ def board_is_full(current_board_state):
     """Check if the board is full
     :param current_board_state: iterable board position statuses
     :returns: bool"""
-    played_positions = [position for position in current_board_state if position != '.']
+    played_positions = [position for position in current_board_state if position != settings['blank_char']]
     return len(played_positions) == 9
 
 
@@ -107,6 +108,13 @@ def game_is_drawn(current_board_state):
     :returns: bool"""
     return board_is_full(current_board_state) and not player_wins(current_board_state, 'X') and not player_wins(
         current_board_state, 'O')
+
+
+def current_valid_plays(current_board_state):
+    """Return a list of valid plays
+    :param current_board_state: iterable board position statuses
+    :returns: list"""
+    return [index for index, position in enumerate(current_board_state) if position == settings['blank_char']]
 
 
 # TODO: consider making a game state or gameplay state function?

@@ -21,7 +21,7 @@ def main():
     create_board_states_table(opponent_name, opponent_char)
 
     # initialize game with starting game state
-    initial_config = ['.'] * 9
+    initial_config = [settings['blank_char']] * 9
     initial_weights = [settings['init_weight']] * 9
     initial_next = []
 

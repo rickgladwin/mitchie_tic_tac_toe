@@ -85,8 +85,8 @@ def insert_fresh_board_state(opponent_name, opponent_char, config):
     config_string = config_from_iterable(config)
     # FIXME: all weights in new board_state records are 10 (init_weight)
     #  so this method isn't currently working, or these aren't being applied
-    state_weights = list(map(lambda x: 0 if x != '.' else settings['init_weight'], config))
-    # state_weights = list(lambda x: 0 if x != '.' else settings['init_weight'] for x in config)
+    state_weights = list(map(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'], config))
+    # state_weights = list(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'] for x in config)
 
     print(f'state_weights: {state_weights}')
     initial_weights = weights_from_iterable(state_weights)
@@ -130,7 +130,7 @@ def select_board_state(opponent_name, opponent_char, config):
     board_state = cur.fetchone()
 
     if not board_state:
-        state_weights = list(map(lambda x: 0 if x != '.' else settings['init_weight'], config))
+        state_weights = list(map(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'], config))
         # initial_weights = weights_from_iterable([10] * 9)
         state_weights = weights_from_iterable(state_weights)
         initial_next = nexts_from_iterable([])
@@ -176,7 +176,7 @@ if __name__ == '__main__':
     create_board_states_table(opp_name, opp_char)
 
     # initialize game with starting game state
-    initial_config = ['.'] * 9
+    initial_config = [settings['blank_char']] * 9
     init_weights = [10] * 9
     init_next = []
 

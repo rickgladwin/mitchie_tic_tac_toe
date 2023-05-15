@@ -1,6 +1,8 @@
 import sys
 
-# empty_char = '.'
+from settings import settings
+
+# empty_char = settings['blank_char']
 empty_char = '\u2592'
 
 
@@ -13,7 +15,7 @@ def print_board_simple(board):
 
     while i < 9:
         board_entry = board[i]
-        if board_entry == '.':
+        if board_entry == settings['blank_char']:
             board_entry = empty_char
         sys.stdout.write(board_entry)
         if i in space_afters:
@@ -30,5 +32,6 @@ def print_game_thread(game_thread):
 
 
 if __name__ == '__main__':
-    sample_board = ['.', '.', 'X', '.', 'O', 'X', '.', 'O', '.']
+    blank = settings['blank_char']
+    sample_board = [blank, blank, 'X', blank, 'O', 'X', blank, 'O', blank]
     print_board_simple(sample_board)

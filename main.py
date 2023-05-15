@@ -53,7 +53,8 @@ def main():
 
         # register opponent's play in game thread
         game_thread.append((current_board_config, opponent_name, opponent_char, next_play))
-        print(f'game thread: {game_thread}')
+        print('game thread:')
+        print_game_thread(game_thread)
         print(f'current board state:')
         print_board_simple(new_board_config)
 
@@ -90,7 +91,8 @@ def main():
         game_thread.append((current_board_config, opponent_name, human_char, next_play))
         current_board_config = new_board_config
 
-        print(f'game thread: {game_thread}')
+        print_game_thread(game_thread)
+        print(f'current board state:')
         print_board_simple(current_board_config)
 
         # check for a win or draw

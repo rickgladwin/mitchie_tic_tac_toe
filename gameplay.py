@@ -55,6 +55,59 @@ def game_is_over(current_board_state):
     # - X wins
     # - O wins
     # - board is full
+    # There are 8 possible winning configurations for each character
+    # (3 rows, 3 columns, 2 diagonals)
+    if player_wins(current_board_state, 'X'):
+        return True
+    if player_wins(current_board_state, 'O'):
+        return True
+    if board_is_full(current_board_state):
+        return True
+
+    return False
+
+
+def player_wins(current_board_state, player_char):
+    """Check if the player wins
+    :param current_board_state: iterable board position statuses
+    :param str player_char: char used by player
+    :returns: bool"""
+    # There are 8 possible winning configurations for each character
+    # (3 rows, 3 columns, 2 diagonals)
+    if current_board_state[0] == current_board_state[1] == current_board_state[2] == player_char:
+        return True
+    if current_board_state[3] == current_board_state[4] == current_board_state[5] == player_char:
+        return True
+    if current_board_state[6] == current_board_state[7] == current_board_state[8] == player_char:
+        return True
+    if current_board_state[0] == current_board_state[3] == current_board_state[6] == player_char:
+        return True
+    if current_board_state[1] == current_board_state[4] == current_board_state[7] == player_char:
+        return True
+    if current_board_state[2] == current_board_state[5] == current_board_state[8] == player_char:
+        return True
+    if current_board_state[0] == current_board_state[4] == current_board_state[8] == player_char:
+        return True
+    if current_board_state[2] == current_board_state[4] == current_board_state[6] == player_char:
+        return True
+    return False
+
+
+def board_is_full(current_board_state):
+    """Check if the board is full
+    :param current_board_state: iterable board position statuses
+    :returns: bool"""
+    played_positions = [position for position in current_board_state if position != '.']
+    return len(played_positions) == 9
+
+
+def game_is_drawn(current_board_state):
+    """Check if the game is drawn
+    :param current_board_state: iterable board position statuses
+    :returns: bool"""
+    return board_is_full(current_board_state) and not player_wins(current_board_state, 'X') and not player_wins(
+        current_board_state, 'O')
+
 
 # TODO: consider making a game state or gameplay state function?
 #  This would return "X wins", "Y wins", "draw", or "in progress"

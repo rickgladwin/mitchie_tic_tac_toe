@@ -1,6 +1,6 @@
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
     forget_all_board_states
-from gameplay import choose_next_play, play
+from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over
 from interaction import print_board_simple, print_game_thread
 from settings import settings
 
@@ -95,11 +95,11 @@ def main():
     #  then update the weights based on the outcome and the game thread
     #  then start a new game
 
-    game_is_over = False
+    current_game_is_over = False
 
     # new_board_state = current_board_state
 
-    while not game_is_over:
+    while not current_game_is_over:
         # opponent plays first
         next_play = choose_next_play(opponent_name, opponent_char, current_board_config)
         new_board_config = play(next_play, opponent_name, opponent_char, current_board_config)
@@ -113,6 +113,10 @@ def main():
         current_board_config = new_board_config
 
         # check for win or draw
+        if game_is_over(current_board_config):
+            current_game_is_over = True
+            print('@@@ Game over @@@')
+            break
 
         # human plays next
         #  prompt for play position (rather than choose_next_play())
@@ -142,6 +146,21 @@ def main():
         print_board_simple(current_board_config)
 
         # check for a win or draw
+        # check for win or draw
+        if game_is_over(current_board_config):
+            print('@@@ Game over @@@')
+            current_game_is_over = True
+
+    # check winner, loser, or draw
+    if player_wins(current_board_config, opponent_char):
+        print('You lose.')
+    if player_wins(current_board_config, human_char):
+        print('You win!')
+    if game_is_drawn(current_board_config):
+        print('Draw.')
+    # update database weights with game results
+
+    # end game or start new game
 
 
 if __name__ == "__main__":

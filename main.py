@@ -32,21 +32,21 @@ def main():
 
     # get initial game state
     current_board_state = initial_config
-    print(f'current board state:')
+    print(f'current (starting) board state:')
     print_board_simple(current_board_state)
 
     # initialize game thread (a list of board states and plays)
     game_thread = []
 
-    current_play = (current_board_state, opponent_name, opponent_char)
-    game_thread.append(current_play)
-
     # opponent plays first
     next_play = choose_next_play(opponent_name, opponent_char, current_board_state)
     new_board_state = play(next_play, opponent_name, opponent_char, current_board_state)
 
+    game_thread.append((current_board_state, opponent_name, opponent_char, next_play))
+    current_board_state = new_board_state
+
     # register opponent's play in game thread
-    game_thread.append((new_board_state, opponent_name, opponent_char))
+    # game_thread.append((new_board_state, opponent_name, opponent_char))
     print(f'game thread: {game_thread}')
     print(f'current board state:')
     print_board_simple(new_board_state)
@@ -73,11 +73,14 @@ def main():
         next_play = int(player_input) - 1
         input_is_valid = True
 
-    new_board_state = play(next_play, opponent_name, human_char, new_board_state)
+    new_board_state = play(next_play, opponent_name, human_char, current_board_state)
     # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
     #  and we don't need to train the AI on *ITS* opponent's moves.
     #  Although we could. Maybe as a next version. Let the AI learn what the human did to win.
-    game_thread.append((new_board_state, opponent_name, human_char))
+    game_thread.append((current_board_state, opponent_name, opponent_char, next_play))
+    current_board_state = new_board_state
+
+    # game_thread.append((new_board_state, opponent_name, human_char))
 
     # get next board state based on play (create the db record if it doesn't exist)
     next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
@@ -95,19 +98,20 @@ def main():
 
     game_is_over = False
 
-    new_board_state = current_board_state
+    # new_board_state = current_board_state
 
     while not game_is_over:
         # opponent plays first
-        # TODO: sometimes the AI plays a position that's already been played
-        next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
-        new_board_state = play(next_play, opponent_name, opponent_char, new_board_state)
+        next_play = choose_next_play(opponent_name, opponent_char, current_board_state)
+        new_board_state = play(next_play, opponent_name, opponent_char, current_board_state)
 
         # register opponent's play in game thread
-        game_thread.append((new_board_state, opponent_name, opponent_char))
+        game_thread.append((current_board_state, opponent_name, opponent_char, next_play))
         print(f'game thread: {game_thread}')
         print(f'current board state:')
         print_board_simple(new_board_state)
+
+        current_board_state = new_board_state
 
         # check for win or draw
 
@@ -128,11 +132,15 @@ def main():
             next_play = int(player_input) - 1
             input_is_valid = True
 
-        new_board_state = play(next_play, opponent_name, human_char, new_board_state)
+        new_board_state = play(next_play, opponent_name, human_char, current_board_state)
         # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
         #  and we don't need to train the AI on *ITS* opponent's moves.
         #  Although we could. Maybe as a next version. Let the AI learn what the human did to win.
-        game_thread.append((new_board_state, opponent_name, human_char))
+        game_thread.append((current_board_state, opponent_name, human_char, next_play))
+        current_board_state = new_board_state
+
+        print(f'game thread: {game_thread}')
+        print_board_simple(current_board_state)
 
         # check for a win or draw
 

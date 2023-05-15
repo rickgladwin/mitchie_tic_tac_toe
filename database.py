@@ -54,12 +54,13 @@ def insert_board_state(conn, board_state):
     #  the played spaces on the board. Look at uses of this function, trace the
     #  arguments.
     config, weights, nexts = board_state
+    print(f'inserting board_state: {board_state}')
     sql = ''' INSERT INTO board_states(config,weights,nexts)
               VALUES(?,?,?) '''
     cur = conn.cursor()
     try:
         cur.execute(sql, board_state)
-        print(f'inserted board_state: {board_state}')
+        print(f'----- inserted board_state: {board_state}')
     except sqlite3.IntegrityError as e:
         print(e)
         print(f'board_state: {board_state}')
@@ -90,7 +91,7 @@ def insert_fresh_board_state(opponent_name, opponent_char, config):
     print(f'state_weights: {state_weights}')
     initial_weights = weights_from_iterable(state_weights)
     initial_next = nexts_from_iterable([])
-    board_state = (config_string, initial_weights, initial_next)
+    board_state = (config_string, state_weights, initial_next)
 
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     insert_board_state(conn, board_state)
@@ -129,11 +130,17 @@ def select_board_state(opponent_name, opponent_char, config):
     board_state = cur.fetchone()
 
     if not board_state:
-        initial_weights = weights_from_iterable([10] * 9)
+        state_weights = list(map(lambda x: 0 if x != '.' else settings['init_weight'], config))
+        # initial_weights = weights_from_iterable([10] * 9)
+        state_weights = weights_from_iterable(state_weights)
         initial_next = nexts_from_iterable([])
-        insert_board_state(conn, (config_string, initial_weights, initial_next))
+        board_state = (config_string, state_weights, initial_next)
+
+        insert_board_state(conn, board_state)
 
     print(f'board_state: {board_state}')
+
+    conn.close()
 
     return board_state
 

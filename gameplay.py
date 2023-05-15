@@ -21,13 +21,14 @@ def choose_next_play(opponent_name, opponent_char, current_board_config):
 
     # if it's not there, add it and initialize its weights
     if not current_board_state:
+        print(f'%% no board state found for {current_board_config}. Inserting...')
         insert_fresh_board_state(opponent_name, opponent_char, current_board_config)
         current_board_state = select_board_state(opponent_name, opponent_char, current_board_config)
 
     config, weights, nexts = current_board_state
 
     # select a next play based on the weights
-    print(f'%% current board state: {current_board_state}')
+    print(f'%% choosing play based on current board state: {current_board_state}')
     play_selection = select_move(iterable_from_weights(weights))
     print(f'%% play selection: {play_selection + 1}')
     # return the next play (the index where the opponent will play)

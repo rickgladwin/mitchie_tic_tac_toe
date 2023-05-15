@@ -37,58 +37,7 @@ def main():
     # initialize game thread (a list of board states and plays)
     game_thread = []
 
-    # opponent plays first
-    # next_play = choose_next_play(opponent_name, opponent_char, current_board_state)
-    # new_board_state = play(next_play, opponent_name, opponent_char, current_board_state)
-
-    # game_thread.append((current_board_config, opponent_name, opponent_char, next_play))
-    # current_board_state = new_board_state
-
-    # register opponent's play in game thread
-    # game_thread.append((new_board_state, opponent_name, opponent_char))
-    # print(f'game thread: {game_thread}')
-    # print(f'current board state:')
-    # print_board_simple(new_board_state)
-
-    # human plays next
-    #  prompt for play position (rather than choose_next_play())
-    #  everything else is the same
-    # TODO: update valid_plays to exclude plays that have already been made
-    #  based on new_board_state
-    # input_is_valid = False
-    # TODO: the previous play is lost after the first human round. print_board_simple() shows a blank space
-    #  where the previous play was. But the game thread still has the previous play.
-    #  Further rounds are okay.
-    # while not input_is_valid:
-    #     print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
-    #     player_input = input()
-    #     if player_input == 'Q' or player_input == 'q':
-    #         print('Thanks for playing!')
-    #         return
-    #     if player_input not in valid_plays:
-    #         print('Invalid input.')
-    #         continue
-    #     # player input is 1-indexed, but the board config is 0-indexed
-    #     next_play = int(player_input) - 1
-    #     input_is_valid = True
-
-    # new_board_state = play(next_play, opponent_name, human_char, current_board_state)
-    # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
-    #  and we don't need to train the AI on *ITS* opponent's moves.
-    #  Although we could. Maybe as a next version. Let the AI learn what the human did to win.
-    # game_thread.append((current_board_state, opponent_name, opponent_char, next_play))
-    # current_board_state = new_board_state
-
-    # game_thread.append((new_board_state, opponent_name, human_char))
-
-    # get next board state based on play (create the db record if it doesn't exist)
-    # next_play = choose_next_play(opponent_name, opponent_char, new_board_state)
-    # TODO: this doesn't include the latest play
-    # game_thread.append((new_board_state, opponent_name, opponent_char))
-    # new_board_state = play(next_play, opponent_name, opponent_char, new_board_state)
-
     print_game_thread(game_thread)
-    # print_board_simple(new_board_state)
 
     # TODO: game loop is AI then human (or vice versa), with db and game state updates, until there's a win or draw
     #  (or until the human quits)
@@ -96,8 +45,6 @@ def main():
     #  then start a new game
 
     current_game_is_over = False
-
-    # new_board_state = current_board_state
 
     while not current_game_is_over:
         # opponent plays first
@@ -147,7 +94,6 @@ def main():
         print_board_simple(current_board_config)
 
         # check for a win or draw
-        # check for win or draw
         if game_is_over(current_board_config):
             print('@@@ Game over @@@')
             current_game_is_over = True

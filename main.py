@@ -128,6 +128,7 @@ def main():
             if player_input == 'Q' or player_input == 'q':
                 print('Thanks for playing!')
                 return
+            # TODO: update valid_plays, removing plays that have already been made
             if player_input not in valid_plays:
                 print('Invalid input.')
                 continue
@@ -159,6 +160,9 @@ def main():
     if game_is_drawn(current_board_config):
         print('Draw.')
     # update database weights with game results
+    # TODO: update weights based on game results
+    # TODO: update game thread after final play
+    # TODO: update database after final play
 
     # end game or start new game
 

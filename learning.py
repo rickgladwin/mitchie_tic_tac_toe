@@ -12,15 +12,19 @@ def update_db_weights(opponent_name, opponent_char, game_thread):
     # TODO: create an update function that takes a weight delta based on settings and win/loss/draw
 
 
-def update_db_board_state(config, position, weight_delta):
+def update_db_board_state(conn, config, position, weight_delta):
     """
     Update weight of board_state in database
+    :param conn: db connection
     :param config: board_state config (primary key)
     :param position: board_state position to update
     :param weight_delta: change to target weight
     :return: None
     """
-
-    # TODO: fetch weights from board_state in db
-    # TODO: update weight at target position with delta
-    # TODO: save board_state to db
+    target_weights = conn.cursor().execute("SELECT weights FROM board_states WHERE config=?", (config,)).fetchone()[0]
+    target_weights = target_weights.split(',')
+    target_weights = list(map(int, target_weights))
+    target_weights[position] += weight_delta
+    target_weights = ','.join(list(map(str, target_weights)))
+    conn.cursor().execute("UPDATE board_states SET weights=? WHERE config=?", (target_weights, config,))
+    conn.commit()

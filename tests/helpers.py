@@ -6,6 +6,7 @@ opponent_name = 'test_opponent'
 opponent_char = 'X'
 sample_config_1 = '.........'
 sample_config_2 = 'XO.OX....'
+sample_weights_2 = '0,0,10,0,0,10,10,10,10'
 sample_config_3 = 'XO.OX..XO'
 
 file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
@@ -17,13 +18,11 @@ def create_db_and_table(db_filepath=file_string):
     (sqlite creates a db if it doesn't exist)
     :return: None
     """
-    # conn = db.create_connection('../sqlite/' + opponent_name + '_' + opponent_char + '.db')
-    # file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
-    print(f'db_filepath: {db_filepath}')
-    if os.path.exists(db_filepath):
-        print('file exists')
-    else:
-        print('file does not exist')
+    # print(f'db_filepath: {db_filepath}')
+    # if os.path.exists(db_filepath):
+    #     print('file exists')
+    # else:
+    #     print('file does not exist')
 
     conn = db.create_connection(db_filepath)
 
@@ -37,7 +36,6 @@ def initialize_board_states(db_filepath=file_string):
     Initialize board_states table with sample board states
     :return: None
     """
-    # file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
     conn = db.create_connection(db_filepath)
 
     cur = conn.cursor()
@@ -64,7 +62,6 @@ def destroy_table(db_filepath=file_string):
 
 
 def get_connection(db_filepath=file_string):
-    # file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
     return db.create_connection(db_filepath)
 
 
@@ -74,8 +71,6 @@ def destroy_db(db_filepath=file_string):
     (sqlite doesn't have a drop database command, so we delete the file itself)
     :return: None
     """
-    # file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
-    # db_filepath = '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
     try:
         os.remove(db_filepath)
     except FileNotFoundError as err:

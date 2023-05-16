@@ -6,3 +6,5 @@ A python implementation of Mitchie's Tic Tac Toe MENACE machine learning system
 ### Unit Tests
 #### All tests, verbose
 ```pytest --verbose```
+#### All tests, with console output, verbose
+```pytest -s --verbose```

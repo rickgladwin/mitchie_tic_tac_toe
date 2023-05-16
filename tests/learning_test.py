@@ -6,23 +6,6 @@ from .helpers import create_db_and_table, initialize_board_states, destroy_table
     get_connection, sample_config_2, sample_weights_2, opponent_name, opponent_char
 
 
-# def setup():
-#     print('\n---- setup: creating db and table, initializing board_states...')
-#     # setup test db and test board_states table
-#     create_db_and_table()
-#     initialize_board_states()
-#     print('---- setup: done.')
-#
-#
-# def teardown():
-#     print('\n---- teardown: destroying table, destroying db...')
-#     # drop test board_states table
-#     destroy_table()
-#     # destroy test db
-#     destroy_db()
-#     print('---- teardown: done.')
-
-
 def setup():
     print('\n---- setup: creating db and table, initializing board_states...')
     # setup test db and test board_states table
@@ -38,6 +21,7 @@ def teardown():
     # destroy test db
     destroy_db()
     print('---- teardown: done.')
+
 
 sample_game_thread = [
     (['.', '.', '.', '.', '.', '.', '.', '.', '.'], 'test_opponent', 'X', 6),  # initial board state (all games)
@@ -89,7 +73,6 @@ class TestUpdateDbWeights(unittest.TestCase):
 
         teardown()
 
-
     def test_updates_a_set_of_db_board_states(self):
         setup()
         conn = get_connection()
@@ -105,7 +88,8 @@ class TestUpdateDbWeights(unittest.TestCase):
         print(f'game_board_configs: {game_board_configs}')
 
         # get set of weights matching game_board_configs
-        game_weights_before = conn.cursor().execute("SELECT weights FROM board_states WHERE config IN ('" + "','".join(game_board_configs) + "')").fetchall()
+        game_weights_before = conn.cursor().execute(
+            "SELECT weights FROM board_states WHERE config IN ('" + "','".join(game_board_configs) + "')").fetchall()
         game_weights_before = list(map(lambda x: x[0], game_weights_before))
         print(f'game_weights_before: {game_weights_before}')
 
@@ -113,25 +97,25 @@ class TestUpdateDbWeights(unittest.TestCase):
         update_db_weights(target_opponent_name, target_opponent_char, sample_game_thread, 'O')
 
         # assert that weights are updated correctly
-        game_weights_after = conn.cursor().execute("SELECT weights FROM board_states WHERE config IN ('" + "','".join(game_board_configs) + "')").fetchall()
+        game_weights_after = conn.cursor().execute(
+            "SELECT weights FROM board_states WHERE config IN ('" + "','".join(game_board_configs) + "')").fetchall()
         game_weights_after = list(map(lambda x: x[0], game_weights_after))
         print(f'game_weights_after:  {game_weights_after}')
 
         # In the sample game thread, X loses, so
         # X plays should have matching weights reduced by the loss weight delta
         for game_state in sample_game_thread:
-            if game_state[2] == 'X':
+            if game_state[2] == target_opponent_char:
                 target_game_weights_before = game_weights_before[game_board_configs.index(''.join(game_state[0]))]
                 target_game_weights_before_iterable = list(map(lambda x: int(x), target_game_weights_before.split(',')))
-                print(f'target_game_weight_before_iterable: {target_game_weights_before_iterable}')
                 target_game_weights_after = game_weights_after[game_board_configs.index(''.join(game_state[0]))]
                 target_game_weights_after_iterable = list(map(lambda x: int(x), target_game_weights_after.split(',')))
-                print(f'target_game_weight_after_iterable:  {target_game_weights_after_iterable}')
                 for i in range(0, len(target_game_weights_before_iterable)):
                     if i != game_state[3]:
                         assert target_game_weights_after_iterable[i] == target_game_weights_before_iterable[i]
                     else:
-                        assert target_game_weights_after_iterable[i] == target_game_weights_before_iterable[i] + settings['loss_weight_delta']
+                        assert target_game_weights_after_iterable[i] == target_game_weights_before_iterable[i] + \
+                               settings['loss_weight_delta']
 
         conn.close()
         # teardown()

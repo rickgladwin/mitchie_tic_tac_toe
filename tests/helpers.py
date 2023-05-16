@@ -26,15 +26,6 @@ sample_board_states = [
     ('XO.OX..XO', '0,0,23,0,0,5,6,0,0', ''),
 ]
 
-# sample_game_thread = [
-#     (['.', '.', '.', '.', '.', '.', '.', '.', '.'], 'test_opponent', 'X', 6),  # initial board state (all games)
-#     (['.', '.', '.', '.', '.', '.', 'X', '.', '.'], 'test_opponent', 'O', 0),  # game 1 play 1
-#     (['O', '.', '.', '.', '.', '.', 'X', '.', '.'], 'test_opponent', 'X', 7),  # game 1 play 2
-#     (['O', '.', '.', '.', '.', '.', 'X', 'X', '.'], 'test_opponent', 'O', 8),  # game 1 play 3
-#     (['O', '.', '.', '.', '.', '.', 'X', 'X', 'O'], 'test_opponent', 'X', 2),  # game 1 play 4
-#     (['O', '.', 'X', '.', '.', '.', 'X', 'X', 'O'], 'test_opponent', 'O', 4),  # game 1 play 5 (O wins with position 4)
-# ]
-
 file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
 
 
@@ -44,12 +35,6 @@ def create_db_and_table(db_filepath=file_string):
     (sqlite creates a db if it doesn't exist)
     :return: None
     """
-    # print(f'db_filepath: {db_filepath}')
-    # if os.path.exists(db_filepath):
-    #     print('file exists')
-    # else:
-    #     print('file does not exist')
-
     conn = db.create_connection(db_filepath)
 
     db.create_table(conn, db.create_board_states_table_sql)
@@ -68,10 +53,6 @@ def initialize_board_states(db_filepath=file_string):
 
     for board_state in sample_board_states:
         cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + board_state[0] + "', '" + board_state[1] + "', '" + board_state[2] + "')")
-
-    # cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_1 + "', '" + sample_weights_1 + "', '')")
-    # cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_2 + "', '" + sample_weights_2 + "', '')")
-    # cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_3 + "', '" + sample_weights_3 + "', '')")
 
     conn.commit()
     conn.close()

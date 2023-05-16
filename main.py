@@ -2,6 +2,7 @@ from database import create_connection, create_board_states_table, insert_board_
     forget_all_board_states
 from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over
 from interaction import print_board_simple, print_game_thread
+from learning import update_db_weights
 from settings import settings
 
 
@@ -100,17 +101,20 @@ def main():
             print('@@@ Game over @@@')
             current_game_is_over = True
 
+    winning_char = None
+
     # check winner, loser, or draw
     if player_wins(current_board_config, opponent_char):
         print('You lose.')
+        winning_char = opponent_char
     if player_wins(current_board_config, human_char):
         print('You win!')
+        winning_char = human_char
     if game_is_drawn(current_board_config):
         print('Draw.')
+
     # update database weights with game results
-    # TODO: update weights based on game results
-    # TODO: update game thread after final play
-    # TODO: update database after final play
+    update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
 
     # end game or start new game
 

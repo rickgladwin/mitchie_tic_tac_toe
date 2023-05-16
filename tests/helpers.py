@@ -5,9 +5,11 @@ import os
 opponent_name = 'test_opponent'
 opponent_char = 'X'
 sample_config_1 = '.........'
+sample_weights_1 = '10,10,10,10,10,10,10,10,10'
 sample_config_2 = 'XO.OX....'
 sample_weights_2 = '0,0,10,0,0,10,10,10,10'
 sample_config_3 = 'XO.OX..XO'
+sample_weights_3 = '0,0,23,0,0,5,6,0,0'
 
 file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
 
@@ -39,9 +41,9 @@ def initialize_board_states(db_filepath=file_string):
     conn = db.create_connection(db_filepath)
 
     cur = conn.cursor()
-    cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_1 + "', '10,10,10,10,10,10,10,10,10', '')")
-    cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_2 + "', '0,0,10,0,0,10,10,10,10', '')")
-    cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_3 + "', '0,0,23,0,0,5,6,0,0', '')")
+    cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_1 + "', '" + sample_weights_1 + "', '')")
+    cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_2 + "', '" + sample_weights_2 + "', '')")
+    cur.execute("INSERT OR IGNORE INTO board_states VALUES ('" + sample_config_3 + "', '" + sample_weights_3 + "', '')")
 
     conn.commit()
     conn.close()

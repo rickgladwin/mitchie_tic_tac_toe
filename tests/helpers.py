@@ -52,11 +52,10 @@ def destroy_table(db_filepath=file_string):
     Destroy a database for opponent
     :return: None
     """
-    # file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
     conn = db.create_connection(db_filepath)
 
     cur = conn.cursor()
-    cur.execute("DROP TABLE board_states")
+    cur.execute("DROP TABLE IF EXISTS board_states")
 
     conn.close()
 

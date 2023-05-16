@@ -11,6 +11,12 @@ sample_weights_2 = '0,0,10,0,0,10,10,10,10'
 sample_config_3 = 'XO.OX..XO'
 sample_weights_3 = '0,0,23,0,0,5,6,0,0'
 
+sample_board_states = [
+    (sample_config_1, sample_weights_1, ''),
+    (sample_config_2, sample_weights_2, ''),
+    (sample_config_3, sample_weights_3, ''),
+]
+
 file_string = os.getcwd() + '/sqlite/' + opponent_name + '_' + opponent_char + '.db'
 
 

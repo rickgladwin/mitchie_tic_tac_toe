@@ -1,5 +1,5 @@
 import math
-from ..selections import range_starts, select_move
+from selections import range_starts, select_move
 
 
 def test_builds_with_basic_weights():

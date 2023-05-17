@@ -75,8 +75,8 @@ for longer._
 * to select which AI will be played against and trained, edit the `opponent_name` variable in `main.py@game_loop`
 * to create a new AI opponent, add a new option for `opponent_name`. A new database will be created
 for this AI automatically.
-* to play against the AI manually, set `human_plays_randomly` to `False` in `main.py@game_loop`
-* with `human_plays_randomly` set to `True`, you will not be prompted to play. Instead, the system
+* to play against the AI manually, set `generate_random_plays` to `False` in `main.py@main`
+* with `generate_random_plays` set to `True`, you will not be prompted to play. Instead, the system
 will choose a valid move for you at random.
 * to set how many rounds will be played before the program exits, edit `rounds_to_play` in `main.py@main`. This
 is useful for letting the AI learn rapidly.

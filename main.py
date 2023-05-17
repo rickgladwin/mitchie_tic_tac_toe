@@ -8,19 +8,26 @@ from settings import settings
 
 
 def main():
-    rounds_to_play = 10000
+    rounds_to_play = 50000
 
     # print the game progress and states to the console?
-    display_this_game = True
+    display_this_game = False
+
+    # generate random plays for the human player?
+    generate_random_plays = True
 
     while rounds_to_play > 0:
-        game_loop(display_game=display_this_game, rounds_remaining=rounds_to_play)
+        game_loop(
+            display_game=display_this_game,
+            rounds_remaining=rounds_to_play,
+            human_plays_randomly=generate_random_plays
+        )
         rounds_to_play -= 1
 
     print('done')
 
 
-def game_loop(display_game=False, rounds_remaining=1):
+def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False):
     # print('starting new game...')
 
     # initialize opponent
@@ -30,7 +37,6 @@ def game_loop(display_game=False, rounds_remaining=1):
 
     # initialize human
     human_char = 'O'
-    human_plays_randomly = False
 
     # reset opponent
     # forget_all_board_states(opponent_name, opponent_char)

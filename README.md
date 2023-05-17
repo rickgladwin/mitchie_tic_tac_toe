@@ -1,4 +1,6 @@
 # mitchie_tic_tac_toe
+![tests: 100% passing](https://img.shields.io/badge/tests-100%25%20passing-green)
+
 A python implementation of Mitchie's Tic Tac Toe MENACE machine learning system
 
 ## Background
@@ -63,7 +65,12 @@ Each record in the database represents a possible board state, including
 ### Settings
 #### System and learning settings
 * change how the system learns by editing `settings.win_weight_delta`, 
-`settings.loss_weight_delta`, etc. in ```settings.py```
+`settings.loss_weight_delta`, etc. in ```settings.py```. _HINT: with `settings.weight_upper_limit` set,
+all initial plays (from a blank board) will eventually have weights matching that maximum value, though
+they will arrive at that value at different rates. Setting this upper limit to a lower value will result
+in more of the possibility space of the board being explored earlier in the learning process. Setting
+the value higher will allow the weights of that initial play to reflect relative real world outcomes
+for longer._
 #### Game settings
 * to select which AI will be played against and trained, edit the `opponent_name` variable in `main.py@game_loop`
 * to create a new AI opponent, add a new option for `opponent_name`. A new database will be created
@@ -79,6 +86,12 @@ in order to speed up the learning process, and consider commenting out the "roun
 command at the end of the game loop._
 
 ## Testing
+_NOTE: as of 2023-05-17, only unit-scoped tests are implemented, and they are not comprehensive. The purpose
+of this repo, as of now, is to explore the algorithm and its implementation. Additionally, end-to-end
+requirements are in flux, and it's not efficient to generate full test coverage for any spec that is
+unstable._
+
+_That said, PRs for additional tests are welcome!_
 
 ### Unit Tests
 #### All tests, verbose

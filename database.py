@@ -50,20 +50,18 @@ def insert_board_state(conn, board_state):
     :param conn: connection object
     :param board_state: tuple of (config, weights, nexts)
     """
-    # FIXME: insert_board_state is getting a list of weights that ignore
-    #  the played spaces on the board. Look at uses of this function, trace the
-    #  arguments.
     config, weights, nexts = board_state
-    print(f'inserting board_state: {board_state}')
+    # print(f'inserting board_state: {board_state}')
     sql = ''' INSERT INTO board_states(config,weights,nexts)
               VALUES(?,?,?) '''
     cur = conn.cursor()
     try:
         cur.execute(sql, board_state)
-        print(f'----- inserted board_state: {board_state}')
+        # print(f'----- inserted board_state: {board_state}')
     except sqlite3.IntegrityError as e:
         if 'UNIQUE constraint failed' in str(e):
-            print(f'board_state exists: {board_state}')
+            # print(f'board_state exists: {board_state}')
+            pass
         else:
             print(e)
             print(f'board_state: {board_state}')
@@ -83,12 +81,10 @@ def insert_fresh_board_state(opponent_name, opponent_char, config):
     :param config: iterable board position statuses
     """
     config_string = config_from_iterable(config)
-    # FIXME: all weights in new board_state records are 10 (init_weight)
-    #  so this method isn't currently working, or these aren't being applied
     state_weights = list(map(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'], config))
     # state_weights = list(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'] for x in config)
 
-    print(f'state_weights: {state_weights}')
+    # print(f'state_weights: {state_weights}')
     initial_weights = weights_from_iterable(state_weights)
     initial_next = nexts_from_iterable([])
     board_state = (config_string, state_weights, initial_next)
@@ -138,7 +134,7 @@ def select_board_state(opponent_name, opponent_char, config):
 
         insert_board_state(conn, board_state)
 
-    print(f'board_state: {board_state}')
+    # print(f'board_state: {board_state}')
 
     conn.close()
 

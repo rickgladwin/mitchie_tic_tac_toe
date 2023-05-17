@@ -1,17 +1,34 @@
+import random
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
     forget_all_board_states
 from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays
-from interaction import print_board_simple, print_game_thread
+from interaction import print_board_simple, print_game_thread, clear_screen
 from learning import update_db_weights
 from settings import settings
 
 
-def game_loop():
-    print('starting...')
-    print('starting with an untrained opponent...')
+def main():
+    rounds_to_play = 100
+
+    # print the game progress and states to the console?
+    display_this_game = True
+
+    while rounds_to_play > 0:
+        game_loop(display_game=display_this_game, rounds_remaining=rounds_to_play)
+        # if not display_this_game:
+        #     clear_screen()
+        # print(f'\nrounds_to_play: {rounds_to_play}')
+        rounds_to_play -= 1
+
+    print('done')
+
+
+def game_loop(display_game=False, rounds_remaining=1):
+    # print('starting new game...')
 
     # initialize opponent
-    opponent_name = 'opponent_1'
+    # opponent_name = 'opponent_1'  # trained against human
+    opponent_name = 'opponent_2'  # trained against random
     opponent_char = 'X'
 
     # initialize human
@@ -40,7 +57,9 @@ def game_loop():
     # initialize game thread (a list of board states and plays)
     game_thread = []
 
-    print_game_thread(game_thread)
+    # clear_screen()
+    # print_board_simple(current_board_config)
+    # print_game_thread(game_thread)
 
     current_game_is_over = False
 
@@ -51,17 +70,20 @@ def game_loop():
 
         # register opponent's play in game thread
         game_thread.append((current_board_config, opponent_name, opponent_char, next_play))
-        print('game thread:')
-        print_game_thread(game_thread)
-        print(f'current board state:')
-        print_board_simple(new_board_config)
 
         current_board_config = new_board_config
+
+        if display_game:
+            clear_screen()
+            print_board_simple(current_board_config)
+            print_game_thread(game_thread)
+            print(f'rounds_remaining: {rounds_remaining - 1}')
 
         # check for win or draw
         if game_is_over(current_board_config):
             current_game_is_over = True
-            print('@@@ Game over @@@')
+            if display_game:
+                print('@@@ Game over @@@')
             break
 
         # human plays next
@@ -70,9 +92,13 @@ def game_loop():
         valid_plays = current_valid_plays(current_board_config)
         input_is_valid = False
         while not input_is_valid:
-            print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
-            print(f'Valid plays: {valid_plays}')
-            player_input = input()
+            if display_game:
+                print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
+                print(f'Valid plays: {valid_plays}')
+            if human_plays_randomly:
+                player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
+            else:
+                player_input = input()
             if player_input == 'Q' or player_input == 'q':
                 print('Thanks for playing!')
                 return
@@ -90,36 +116,47 @@ def game_loop():
         game_thread.append((current_board_config, opponent_name, human_char, next_play))
         current_board_config = new_board_config
 
-        print_game_thread(game_thread)
-        print(f'current board state:')
-        print_board_simple(current_board_config)
+        if display_game:
+            clear_screen()
+            print_board_simple(current_board_config)
+            print_game_thread(game_thread)
+            print(f'rounds_remaining: {rounds_remaining - 1}')
 
         # check for a win or draw
         if game_is_over(current_board_config):
-            print('@@@ Game over @@@')
+            if display_game:
+                print('@@@ Game over @@@')
             current_game_is_over = True
 
     winning_char = None
 
     # check winner, loser, or draw
     if player_wins(current_board_config, opponent_char):
-        print('You lose.')
+        if display_game:
+            print('You lose.')
         winning_char = opponent_char
     if player_wins(current_board_config, human_char):
-        print('You win!')
+        if display_game:
+            print('You win!')
         winning_char = human_char
     if game_is_drawn(current_board_config):
-        print('Draw.')
+        if display_game:
+            print('Draw.')
 
     # update database weights with game results
     update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
 
+    # print(f'rounds_remaining: {rounds_remaining - 1}')
+
     # end game or start new game
     # TODO: allow for ai to play first
     # TODO: ensure game_thread, board_states update, and learning works for ai playing first
+    # TODO: display learning progress, game count, game results, etc.
 
 
 if __name__ == "__main__":
-    # print('example board:')
-    # print_board_simple(example_board_config)
-    game_loop()
+    # play a single round
+    # game_loop()
+
+    # play until program is quit (calls game_loop() repeatedly)
+    main()

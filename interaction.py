@@ -1,6 +1,8 @@
+import os
 import sys
 
 from settings import settings
+from shlex import quote as shlex_quote
 
 # empty_char = settings['blank_char']
 empty_char = '\u2592'
@@ -29,6 +31,14 @@ def print_game_thread(game_thread):
     """Prints the history of the game to the console."""
     for play in game_thread:
         print(play)
+    for i in range(0, 9 - len(game_thread)):
+        print('')
+
+
+def clear_screen():
+    """Clears the screen."""
+    # print("\033c", end="")
+    os.system(shlex_quote('cls') if os.name == 'nt' else 'clear')
 
 
 if __name__ == '__main__':

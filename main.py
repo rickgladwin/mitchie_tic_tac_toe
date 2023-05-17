@@ -8,10 +8,10 @@ from settings import settings
 
 
 def main():
-    rounds_to_play = 100
+    rounds_to_play = 1000
 
     # print the game progress and states to the console?
-    display_this_game = True
+    display_this_game = False
 
     while rounds_to_play > 0:
         game_loop(display_game=display_this_game, rounds_remaining=rounds_to_play)
@@ -146,7 +146,9 @@ def game_loop(display_game=False, rounds_remaining=1):
     # update database weights with game results
     update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
 
-    # print(f'rounds_remaining: {rounds_remaining - 1}')
+    if not display_game:
+        clear_screen()
+        print(f'rounds_remaining: {rounds_remaining - 1}')
 
     # end game or start new game
     # TODO: allow for ai to play first

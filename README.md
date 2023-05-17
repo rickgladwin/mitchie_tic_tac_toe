@@ -73,6 +73,10 @@ for this AI automatically.
 will choose a valid move for you at random.
 * to set how many rounds will be played before the program exits, edit `rounds_to_play` in `main.py@main`. This
 is useful for letting the AI learn rapidly.
+* to turn verbose console display of game progress on or off, edit `display_this_game` in `main.py@main`.
+_NOTE: printing to the console is a major bottleneck in python programs. Set `display_this_game` to `False`
+in order to speed up the learning process, and consider commenting out the "rounds remaining: ..." print
+command at the end of the game loop._
 
 ## Testing
 

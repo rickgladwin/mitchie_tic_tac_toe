@@ -1,6 +1,6 @@
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
     forget_all_board_states
-from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over
+from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays
 from interaction import print_board_simple, print_game_thread
 from learning import update_db_weights
 from settings import settings
@@ -32,8 +32,8 @@ def main():
 
     # get initial game state
     current_board_config = initial_config
-    print(f'current (starting) board state:')
-    print_board_simple(current_board_config)
+    # print(f'current (starting) board state:')
+    # print_board_simple(current_board_config)
 
     # initialize game thread (a list of board states and plays)
     game_thread = []
@@ -70,15 +70,17 @@ def main():
         # human plays next
         #  prompt for play position (rather than choose_next_play())
         #  everything else is the same
+        valid_plays = current_valid_plays(current_board_config)
         input_is_valid = False
         while not input_is_valid:
             print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
+            print(f'Valid plays: {valid_plays}')
             player_input = input()
             if player_input == 'Q' or player_input == 'q':
                 print('Thanks for playing!')
                 return
             # TODO: update valid_plays, removing plays that have already been made
-            if player_input not in valid_plays:
+            if int(player_input) not in valid_plays:
                 print('Invalid input.')
                 continue
             # player input is 1-indexed, but the board config is 0-indexed

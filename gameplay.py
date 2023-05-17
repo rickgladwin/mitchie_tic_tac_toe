@@ -110,11 +110,11 @@ def game_is_drawn(current_board_state):
         current_board_state, 'O')
 
 
-def current_valid_plays(current_board_state):
+def current_valid_plays(current_board_config):
     """Return a list of valid plays
-    :param current_board_state: iterable board position statuses
+    :param current_board_config: iterable board position statuses
     :returns: list"""
-    return [index for index, position in enumerate(current_board_state) if position == settings['blank_char']]
+    return [index + 1 for index, position in enumerate(current_board_config) if position == settings['blank_char']]
 
 
 # TODO: consider making a game state or gameplay state function?

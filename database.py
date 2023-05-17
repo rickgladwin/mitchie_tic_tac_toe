@@ -62,11 +62,11 @@ def insert_board_state(conn, board_state):
         cur.execute(sql, board_state)
         print(f'----- inserted board_state: {board_state}')
     except sqlite3.IntegrityError as e:
-        print(e)
-        print(f'board_state: {board_state}')
-        print(f'config: {config}')
-        print(f'weights: {weights}')
-        print(f'nexts: {nexts}')
+        if 'UNIQUE constraint failed' in str(e):
+            print(f'board_state exists: {board_state}')
+        else:
+            print(e)
+            print(f'board_state: {board_state}')
     except sqlite3.InterfaceError as e:
         print(e)
         print('Did you remember to convert the iterables to strings?')

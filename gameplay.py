@@ -11,10 +11,6 @@ def iterable_from_weights(weights):
     return list(map(int, weights.split(',')))
 
 
-# TODO: make an equivalent function for human player, where move choice is provided rather than selected,
-#  and/or extract the check and update to the board_states table.
-# TODO: ensure current_board_config is updated before choosing the play (ensure that the weight for any played
-#  position is updated to 0)
 def choose_next_play(opponent_name, opponent_char, current_board_config):
     # look up current board state in database
     # opponent_conn = create_connection('sqlite/' + opponent_name + '.db')
@@ -114,7 +110,7 @@ def current_valid_plays(current_board_config):
     """Return a list of valid plays
     :param current_board_config: iterable board position statuses
     :returns: list"""
-    return [index + 1 for index, position in enumerate(current_board_config) if position == settings['blank_char']]
+    return [str(index + 1) for index, position in enumerate(current_board_config) if position == settings['blank_char']]
 
 
 # TODO: consider making a game state or gameplay state function?

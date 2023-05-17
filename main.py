@@ -6,15 +6,17 @@ from learning import update_db_weights
 from settings import settings
 
 
-def main():
+def game_loop():
     print('starting...')
     print('starting with an untrained opponent...')
 
     # initialize opponent
     opponent_name = 'opponent_1'
     opponent_char = 'X'
+
+    # initialize human
     human_char = 'O'
-    valid_plays = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    human_plays_randomly = True
 
     # reset opponent
     # forget_all_board_states(opponent_name, opponent_char)
@@ -39,11 +41,6 @@ def main():
     game_thread = []
 
     print_game_thread(game_thread)
-
-    # TODO: game loop is AI then human (or vice versa), with db and game state updates, until there's a win or draw
-    #  (or until the human quits)
-    #  then update the weights based on the outcome and the game thread
-    #  then start a new game
 
     current_game_is_over = False
 
@@ -79,8 +76,7 @@ def main():
             if player_input == 'Q' or player_input == 'q':
                 print('Thanks for playing!')
                 return
-            # TODO: update valid_plays, removing plays that have already been made
-            if int(player_input) not in valid_plays:
+            if player_input not in valid_plays:
                 print('Invalid input.')
                 continue
             # player input is 1-indexed, but the board config is 0-indexed
@@ -119,9 +115,11 @@ def main():
     update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
 
     # end game or start new game
+    # TODO: allow for ai to play first
+    # TODO: ensure game_thread, board_states update, and learning works for ai playing first
 
 
 if __name__ == "__main__":
     # print('example board:')
     # print_board_simple(example_board_config)
-    main()
+    game_loop()

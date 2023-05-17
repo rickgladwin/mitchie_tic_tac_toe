@@ -8,16 +8,13 @@ from settings import settings
 
 
 def main():
-    rounds_to_play = 1000
+    rounds_to_play = 10000
 
     # print the game progress and states to the console?
-    display_this_game = False
+    display_this_game = True
 
     while rounds_to_play > 0:
         game_loop(display_game=display_this_game, rounds_remaining=rounds_to_play)
-        # if not display_this_game:
-        #     clear_screen()
-        # print(f'\nrounds_to_play: {rounds_to_play}')
         rounds_to_play -= 1
 
     print('done')
@@ -33,7 +30,7 @@ def game_loop(display_game=False, rounds_remaining=1):
 
     # initialize human
     human_char = 'O'
-    human_plays_randomly = True
+    human_plays_randomly = False
 
     # reset opponent
     # forget_all_board_states(opponent_name, opponent_char)
@@ -149,6 +146,9 @@ def game_loop(display_game=False, rounds_remaining=1):
     if not display_game:
         clear_screen()
         print(f'rounds_remaining: {rounds_remaining - 1}')
+
+    if not human_plays_randomly:
+        input('Press any key to continue.')
 
     # end game or start new game
     # TODO: allow for ai to play first

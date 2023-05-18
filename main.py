@@ -11,10 +11,10 @@ def main():
     rounds_to_play = 100000
 
     # print the game progress and states to the console?
-    display_this_game = False
+    display_this_game = True
 
     # generate random plays for the human player?
-    generate_random_plays = True
+    generate_random_plays = False
 
     while rounds_to_play > 0:
         game_loop(

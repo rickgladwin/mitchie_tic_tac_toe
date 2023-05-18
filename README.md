@@ -106,3 +106,8 @@ play and still giving some priority to plays that have led to its own victories.
   * I'm adding a `winning_play()` function to the `gameplay` module, so that once a board state
   exists that would result in a win for the human player, the "generate random" player will
   play there. This will hopefully change the AI's prioritization to block imminent human wins.
+  * Before adding `winning_play()` to the random opponent's game loop, the AI trained against a random
+  player was more likely to make its first play in a corner, and unlikely to play in the middle of
+  a side or in the centre position. After adding `winning_play()`, the AI is more likely to play in
+  the centre position. Tic-tac-toe being a solved game which can always be played to a win or draw, the
+  first play in the centre matches the optimal strategy for the first player.

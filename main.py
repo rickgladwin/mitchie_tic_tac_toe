@@ -1,20 +1,20 @@
 import random
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
     forget_all_board_states
-from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays
+from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays, winning_play
 from interaction import print_board_simple, print_game_thread, clear_screen
 from learning import update_db_weights
 from settings import settings
 
 
 def main():
-    rounds_to_play = 50000
+    rounds_to_play = 10000
 
     # print the game progress and states to the console?
-    display_this_game = False
+    display_this_game = True
 
     # generate random plays for the human player?
-    generate_random_plays = True
+    generate_random_plays = False
 
     while rounds_to_play > 0:
         game_loop(
@@ -31,9 +31,9 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # print('starting new game...')
 
     # initialize opponent
-    opponent_name = 'opponent_1'  # trained against human
+    # opponent_name = 'opponent_1'  # trained against human
     # opponent_name = 'opponent_2'  # trained against (mostly) random
-    # opponent_name = 'opponent_3'  # trained against random with "winning play" awareness
+    opponent_name = 'opponent_3'  # trained against random with "winning play" awareness
     opponent_char = 'X'
 
     # initialize human
@@ -100,7 +100,11 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
                 print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
                 print(f'Valid plays: {valid_plays}')
             if human_plays_randomly:
-                player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
+                play_for_win = winning_play(current_board_config, human_char)
+                if play_for_win is not None:
+                    player_input = play_for_win
+                else:
+                    player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
             else:
                 player_input = input()
             if player_input == 'Q' or player_input == 'q':

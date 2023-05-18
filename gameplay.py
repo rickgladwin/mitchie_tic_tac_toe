@@ -127,31 +127,31 @@ def winning_play(current_board_config, player_char):
     player_chars_in_row = len([position for position in current_board_config[3:6] if position == player_char])
     if player_chars_in_row == 2 and settings['blank_char'] in current_board_config[3:6]:
         blank_char_index = current_board_config[3:6].index(settings['blank_char'])
-        return str(blank_char_index + 1 + 3)
+        return str(blank_char_index + 3 + 1)
 
     # check third row
     player_chars_in_row = len([position for position in current_board_config[6:9] if position == player_char])
     if player_chars_in_row == 2 and settings['blank_char'] in current_board_config[6:9]:
         blank_char_index = current_board_config[6:9].index(settings['blank_char'])
-        return str(blank_char_index + 1 + 6)
+        return str(blank_char_index + 6 + 1)
 
     # check first column
     player_chars_in_col = len([position for position in current_board_config[0:9:3] if position == player_char])
     if player_chars_in_col == 2 and settings['blank_char'] in current_board_config[0:9:3]:
         blank_char_index = current_board_config[0:9:3].index(settings['blank_char'])
-        return str(0 + blank_char_index + (0 * 3) + 1)
+        return str(0 + blank_char_index * 3 + 1)
 
     # check second column
     player_chars_in_col = len([position for position in current_board_config[1:9:3] if position == player_char])
     if player_chars_in_col == 2 and settings['blank_char'] in current_board_config[1:9:3]:
         blank_char_index = current_board_config[1:9:3].index(settings['blank_char'])
-        return str(1 + blank_char_index + (1 * 3) + 1)
+        return str(1 + blank_char_index * 3 + 1)
 
     # check third column
     player_chars_in_col = len([position for position in current_board_config[2:9:3] if position == player_char])
     if player_chars_in_col == 2 and settings['blank_char'] in current_board_config[2:9:3]:
         blank_char_index = current_board_config[2:9:3].index(settings['blank_char'])
-        return str(2 + blank_char_index + (2 * 3) + 1)
+        return str(2 + blank_char_index * 3 + 1)
 
     # check first diagonal
     player_chars_in_diag = len([position for position in current_board_config[0:9:4] if position == player_char])

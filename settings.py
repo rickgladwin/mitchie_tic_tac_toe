@@ -4,6 +4,6 @@ settings = {
     'win_weight_delta': 3,
     'loss_weight_delta': -2,
     'draw_weight_delta': 1,
-    'weight_upper_limit': 5000,
+    'weight_upper_limit': float('inf'),
     'weight_lower_limit': 1,
 }

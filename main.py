@@ -31,8 +31,9 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # print('starting new game...')
 
     # initialize opponent
-    # opponent_name = 'opponent_1'  # trained against human
-    opponent_name = 'opponent_2'  # trained against random
+    opponent_name = 'opponent_1'  # trained against human
+    # opponent_name = 'opponent_2'  # trained against (mostly) random
+    # opponent_name = 'opponent_3'  # trained against random with "winning play" awareness
     opponent_char = 'X'
 
     # initialize human

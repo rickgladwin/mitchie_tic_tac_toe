@@ -113,6 +113,60 @@ def current_valid_plays(current_board_config):
     return [str(index + 1) for index, position in enumerate(current_board_config) if position == settings['blank_char']]
 
 
+def winning_play(current_board_config, player_char):
+    """If there's a play for player_char that will win the game, return it"""
+    # winning play is a row, column, or diagonal with 2 of player_char and 1 blank
+
+    # check first row
+    player_chars_in_row = len([position for position in current_board_config[:3] if position == player_char])
+    if player_chars_in_row == 2 and settings['blank_char'] in current_board_config[0:3]:
+        blank_char_index = current_board_config[0:3].index(settings['blank_char'])
+        return str(blank_char_index + 1)
+
+    # check second row
+    player_chars_in_row = len([position for position in current_board_config[3:6] if position == player_char])
+    if player_chars_in_row == 2 and settings['blank_char'] in current_board_config[3:6]:
+        blank_char_index = current_board_config[3:6].index(settings['blank_char'])
+        return str(blank_char_index + 1 + 3)
+
+    # check third row
+    player_chars_in_row = len([position for position in current_board_config[6:9] if position == player_char])
+    if player_chars_in_row == 2 and settings['blank_char'] in current_board_config[6:9]:
+        blank_char_index = current_board_config[6:9].index(settings['blank_char'])
+        return str(blank_char_index + 1 + 6)
+
+    # check first column
+    player_chars_in_col = len([position for position in current_board_config[0:9:3] if position == player_char])
+    if player_chars_in_col == 2 and settings['blank_char'] in current_board_config[0:9:3]:
+        blank_char_index = current_board_config[0:9:3].index(settings['blank_char'])
+        return str(0 + blank_char_index + (0 * 3) + 1)
+
+    # check second column
+    player_chars_in_col = len([position for position in current_board_config[1:9:3] if position == player_char])
+    if player_chars_in_col == 2 and settings['blank_char'] in current_board_config[1:9:3]:
+        blank_char_index = current_board_config[1:9:3].index(settings['blank_char'])
+        return str(1 + blank_char_index + (1 * 3) + 1)
+
+    # check third column
+    player_chars_in_col = len([position for position in current_board_config[2:9:3] if position == player_char])
+    if player_chars_in_col == 2 and settings['blank_char'] in current_board_config[2:9:3]:
+        blank_char_index = current_board_config[2:9:3].index(settings['blank_char'])
+        return str(2 + blank_char_index + (2 * 3) + 1)
+
+    # check first diagonal
+    player_chars_in_diag = len([position for position in current_board_config[0:9:4] if position == player_char])
+    if player_chars_in_diag == 2 and settings['blank_char'] in current_board_config[0:9:4]:
+        blank_char_index = current_board_config[0:9:4].index(settings['blank_char'])
+        return str(0 + blank_char_index * 4 + 1)
+
+    # check second diagonal
+    player_chars_in_diag = len([position for position in current_board_config[2:7:2] if position == player_char])
+    if player_chars_in_diag == 2 and settings['blank_char'] in current_board_config[2:7:2]:
+        blank_char_index = current_board_config[2:7:2].index(settings['blank_char'])
+        return str(2 + blank_char_index * 2 + 1)
+
+    return None
+
 # TODO: consider making a game state or gameplay state function?
 #  This would return "X wins", "Y wins", "draw", or "in progress"
 #  (matching a game state enum) and could be checked in the main loop.

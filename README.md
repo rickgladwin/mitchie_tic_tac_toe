@@ -111,3 +111,4 @@ play and still giving some priority to plays that have led to its own victories.
   a side or in the centre position. After adding `winning_play()`, the AI is more likely to play in
   the centre position. Tic-tac-toe being a solved game which can always be played to a win or draw, the
   first play in the centre matches the optimal strategy for the first player.
+  * After adding `winning_play()`, the AI feels much more difficult to beat.

@@ -1,7 +1,8 @@
 import random
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
     forget_all_board_states
-from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays, winning_play
+from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays, \
+    winning_play, choose_next_human_play
 from interaction import print_board_simple, print_game_thread, clear_screen
 from learning import update_db_weights
 from settings import settings
@@ -38,6 +39,7 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     opponent_char = 'X'
 
     # initialize human
+    human_name = 'human'
     human_char = 'O'
 
     # reset opponent
@@ -67,6 +69,8 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # print_game_thread(game_thread)
 
     current_game_is_over = False
+    player_playing_next = opponent_name
+    next_character = opponent_char
 
     while not current_game_is_over:
         # opponent plays first
@@ -95,28 +99,31 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
         #  prompt for play position (rather than choose_next_play())
         #  everything else is the same
         valid_plays = current_valid_plays(current_board_config)
-        input_is_valid = False
-        while not input_is_valid:
-            if display_game:
-                print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
-                print(f'Valid plays: {valid_plays}')
-            if human_plays_randomly:
-                play_for_win = winning_play(current_board_config, human_char)
-                if play_for_win is not None:
-                    player_input = play_for_win
-                else:
-                    player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
-            else:
-                player_input = input()
-            if player_input == 'Q' or player_input == 'q':
-                print('Thanks for playing!')
-                return
-            if player_input not in valid_plays:
-                print('Invalid input.')
-                continue
-            # player input is 1-indexed, but the board config is 0-indexed
-            next_play = int(player_input) - 1
-            input_is_valid = True
+
+        next_play = choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game)
+
+        # input_is_valid = False
+        # while not input_is_valid:
+        #     if display_game:
+        #         print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
+        #         print(f'Valid plays: {valid_plays}')
+        #     if human_plays_randomly:
+        #         play_for_win = winning_play(current_board_config, human_char)
+        #         if play_for_win is not None:
+        #             player_input = play_for_win
+        #         else:
+        #             player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
+        #     else:
+        #         player_input = input()
+        #     if player_input == 'Q' or player_input == 'q':
+        #         print('Thanks for playing!')
+        #         return
+        #     if player_input not in valid_plays:
+        #         print('Invalid input.')
+        #         continue
+        #     # player input is 1-indexed, but the board config is 0-indexed
+        #     next_play = int(player_input) - 1
+        #     input_is_valid = True
 
         new_board_config = play(next_play, opponent_name, human_char, current_board_config)
         # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
@@ -166,6 +173,7 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # TODO: allow for ai to play first
     # TODO: ensure game_thread, board_states update, and learning works for ai playing first
     # TODO: display learning progress, game count, game results, etc.
+
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import random
+
 from database import create_connection, select_board_state, insert_fresh_board_state
 from selections import select_move
 from settings import settings
@@ -30,6 +32,33 @@ def choose_next_play(opponent_name, opponent_char, current_board_config):
     # print(f'%% play selection: {play_selection + 1}')
     # return the next play (the index where the opponent will play)
     return play_selection
+
+
+def choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game=True, human_plays_randomly=False):
+    input_is_valid = False
+    while not input_is_valid:
+        if human_plays_randomly:
+            play_for_win = winning_play(current_board_config, human_char)
+            if play_for_win is not None:
+                player_input = play_for_win
+            else:
+                player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
+        else:
+            if display_game:
+                print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
+                print(f'Valid plays: {valid_plays}')
+            player_input = input()
+            if player_input == 'Q' or player_input == 'q':
+                print('Thanks for playing!')
+                exit(0)
+            if player_input not in valid_plays:
+                print('Invalid input.')
+                continue
+        # player input is 1-indexed, but the board config is 0-indexed
+        next_play = int(player_input) - 1
+        input_is_valid = True
+
+    return next_play
 
 
 def play(placement, opponent_name, opponent_char, current_board_state):

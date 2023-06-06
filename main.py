@@ -175,7 +175,6 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # TODO: display learning progress, game count, game results, etc.
 
 
-
 if __name__ == "__main__":
     # play a single round
     # game_loop()

@@ -9,13 +9,13 @@ from settings import settings
 
 
 def main():
-    rounds_to_play = 1000
+    rounds_to_play = 100
 
     # print the game progress and states to the console?
     display_this_game = True
 
     # generate random plays for the human player?
-    generate_random_plays = False
+    generate_random_plays = True
 
     while rounds_to_play > 0:
         game_loop(
@@ -100,7 +100,7 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
         #  everything else is the same
         valid_plays = current_valid_plays(current_board_config)
 
-        next_play = choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game)
+        next_play = choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game, human_plays_randomly)
 
         # input_is_valid = False
         # while not input_is_valid:

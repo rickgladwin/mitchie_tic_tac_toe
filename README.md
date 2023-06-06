@@ -55,13 +55,19 @@ identifier in the database.
 ### Run the game
 * activate the environment
   ```conda activate ai_ml```
+* determine the way the game will run (waiting for human player input, running/training
+against an automated algorithm, number of rounds, etc. – See Settings below) by updating
+the relevant parts of `main.py`
 * From the root of the repo, run
   ```python main.py```
 ### Review results
 With a SQLite client, open the database file matching the name of the relevant opponent and their
 player character ('X' or 'O')
 
-Each record in the database represents a possible board state, including 
+Each record in the database represents a possible board state, including all states that the AI has experienced.
+
+The records in the database may not represent all possible board states, as some board states closer to
+the possibility space for losing games may never be encountered by the AI given a finite training run.
 ### Settings
 #### System and learning settings
 * change how the system learns by editing `settings.win_weight_delta`, 
@@ -100,10 +106,12 @@ _That said, PRs for additional tests are welcome!_
 ```pytest -s --verbose```
 
 ## Insights
+* How an AI is trained, and the progression of that training, matters very much with respect to
+the final behaviour of the AI!
 * An AI trained against a random player seems more difficult to beat than an untrained AI, but
 still fees very beatable. It fails to prioritize blocking the human player's win, expecting a random
 play and still giving some priority to plays that have led to its own victories.
-  * I'm adding a `winning_play()` function to the `gameplay` module, so that once a board state
+  * I added a `winning_play()` function to the `gameplay` module, so that once a board state
   exists that would result in a win for the human player, the "generate random" player will
   play there. This will hopefully change the AI's prioritization to block imminent human wins.
   * Before adding `winning_play()` to the random opponent's game loop, the AI trained against a random
@@ -112,3 +120,16 @@ play and still giving some priority to plays that have led to its own victories.
   the centre position. Tic-tac-toe being a solved game which can always be played to a win or draw, the
   first play in the centre matches the optimal strategy for the first player.
   * After adding `winning_play()`, the AI feels much more difficult to beat.
+* Setting a finite maximum weight for the plays results in a set of weights for the initial
+play that favours any play that isn't strictly detrimental, rather than favouring the centre.
+  * Setting the maximum weight to `float('inf')` results in the centre position being favoured continuously (though
+we should be careful to account for the maximum float value for the hardware or language)
+* Setting a minimum weight of 1 for the plays means there is still some small chance of the AI
+playing in a suboptimal position, and so some randomness remains in the game. Setting a minimum
+weight of 0 will result in those moves being eliminated from the possible plays after losing
+<initial weight> games that included that play.
+
+## Next Steps:
+- create visualizations for the state of the AI's training over time
+- create visualizations for the gameplay itself (currently outputs to the console)
+- make two AIs play against each other, and see how their strategies evolve

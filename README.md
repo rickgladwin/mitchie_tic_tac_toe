@@ -128,8 +128,21 @@ we should be careful to account for the maximum float value for the hardware or 
 playing in a suboptimal position, and so some randomness remains in the game. Setting a minimum
 weight of 0 will result in those moves being eliminated from the possible plays after losing
 <initial weight> games that included that play.
+* Training the AI against a purely random opponent resulted in a database that included over 2400
+configs after a high number of training rounds, whereas training it against a random opponent
+that prioritized completing a 2-in-a-row for the win resulted in a database with over 1900. 
+  * This has interesting implications for the relationship between "well-trained" AIs and AIs trained using
+a faulty method: a "better trained" AI doesn't necessarily have a larger or more complex brain state.
+  * The caveat here is that, in the case of this repo, the "better trained" AI will simply see
+fewer possible board states, since games will end earlier in general. But this kind of effect
+may still show up in other examples of AI and machine learning, especially once we consider the
+complexity of convolutional neural networks, ANNs with hidden layers and exotic architectures,
+and other more complex models – the complexity may be overkill in some situations, e.g. in
+CNNs that are overtrained with too many hidden layers.
 
 ## Next Steps:
 - create visualizations for the state of the AI's training over time
 - create visualizations for the gameplay itself (currently outputs to the console)
 - make two AIs play against each other, and see how their strategies evolve
+- study the ways in which the asymmetries in the weights on the blank config emerge under
+different training conditions, algorithms, and methods

@@ -1,15 +1,23 @@
 import random
+from enum import Enum
+
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
-    forget_all_board_states
+    forget_all_board_states, create_game_history_table, select_board_state
 from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays, \
     winning_play, choose_next_human_play
 from interaction import print_board_simple, print_game_thread, clear_screen
-from learning import update_db_weights
+from learning import update_db_weights, update_game_history
 from settings import settings
 
 
+class GameResults(str, Enum):
+    WIN = 'win',
+    LOSS = 'loss',
+    DRAW = 'draw',
+
+
 def main():
-    rounds_to_play = 100
+    rounds_to_play = 5
 
     # print the game progress and states to the console?
     display_this_game = True
@@ -46,6 +54,7 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # forget_all_board_states(opponent_name, opponent_char)
 
     create_board_states_table(opponent_name, opponent_char)
+    create_game_history_table(opponent_name, opponent_char)
 
     # initialize game with starting game state
     initial_config = [settings['blank_char']] * 9
@@ -151,16 +160,27 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
         if display_game:
             print('You lose.')
         winning_char = opponent_char
+        opponent_game_result = GameResults.WIN.value
     if player_wins(current_board_config, human_char):
         if display_game:
             print('You win!')
         winning_char = human_char
+        opponent_game_result = GameResults.LOSS.value
     if game_is_drawn(current_board_config):
         if display_game:
             print('Draw.')
+        opponent_game_result = GameResults.DRAW.value
 
     # update database weights with game results
     update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
+    # add game to game history
+    blank_board_state = select_board_state(opponent_name, opponent_char, '.........')
+    # print(f'blank_board_state: {blank_board_state}')
+    _, blank_weights, _ = blank_board_state
+    # print(f'blank_weights: {blank_weights}')
+    # print(f'type(opponent_game_result): {type(opponent_game_result)}')
+    # print(f'opponent_game_result: {opponent_game_result}')
+    update_game_history(opponent_name, opponent_char, opponent_game_result, blank_weights)
 
     if not display_game:
         clear_screen()

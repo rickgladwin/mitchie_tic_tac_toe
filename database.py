@@ -150,9 +150,25 @@ CREATE TABLE IF NOT EXISTS board_states (
 """
 
 
+create_game_history_table_sql = """
+CREATE TABLE IF NOT EXISTS game_history (
+    game_number INTEGER PRIMARY KEY, 
+    blank_weights blob, -- value of 'weights' column for '.........' config
+    result text, -- 'win', 'loss', 'draw' for this player
+    created_at timestamp 
+);
+"""
+
+
 def create_board_states_table(opponent_name, opponent_char):
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     create_table(conn, create_board_states_table_sql)
+    conn.close()
+
+
+def create_game_history_table(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    create_table(conn, create_game_history_table_sql)
     conn.close()
 
 
@@ -160,6 +176,14 @@ def forget_all_board_states(opponent_name, opponent_char):
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     cur = conn.cursor()
     cur.execute('DELETE FROM board_states')
+    conn.commit()
+    conn.close()
+
+
+def forget_all_game_history(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    cur = conn.cursor()
+    cur.execute('DELETE FROM game_history')
     conn.commit()
     conn.close()
 

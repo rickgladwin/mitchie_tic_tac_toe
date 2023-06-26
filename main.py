@@ -17,7 +17,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 5
+    rounds_to_play = 200
 
     # print the game progress and states to the console?
     display_this_game = True
@@ -43,7 +43,9 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # opponent_name = 'opponent_1'  # trained against human
     # opponent_name = 'opponent_2'  # trained against (mostly) random
     # opponent_name = 'opponent_3'  # trained against random with "winning play" awareness, with upper weight limit 5000
-    opponent_name = 'opponent_4'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_4'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_7'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    opponent_name = 'opponent_8'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     opponent_char = 'X'
 
     # initialize human
@@ -110,29 +112,6 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
         valid_plays = current_valid_plays(current_board_config)
 
         next_play = choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game, human_plays_randomly)
-
-        # input_is_valid = False
-        # while not input_is_valid:
-        #     if display_game:
-        #         print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
-        #         print(f'Valid plays: {valid_plays}')
-        #     if human_plays_randomly:
-        #         play_for_win = winning_play(current_board_config, human_char)
-        #         if play_for_win is not None:
-        #             player_input = play_for_win
-        #         else:
-        #             player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
-        #     else:
-        #         player_input = input()
-        #     if player_input == 'Q' or player_input == 'q':
-        #         print('Thanks for playing!')
-        #         return
-        #     if player_input not in valid_plays:
-        #         print('Invalid input.')
-        #         continue
-        #     # player input is 1-indexed, but the board config is 0-indexed
-        #     next_play = int(player_input) - 1
-        #     input_is_valid = True
 
         new_board_config = play(next_play, opponent_name, human_char, current_board_config)
         # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,

@@ -103,6 +103,11 @@ def weights_from_iterable(weights):
     return weights_string
 
 
+def iterable_from_weights(weights: str):
+    iterable = [int(x) for x in weights.split(',')]
+    return iterable
+
+
 def nexts_from_iterable(nexts):
     nexts_string = ','.join(list(map(str, nexts)))
     return nexts_string
@@ -158,6 +163,40 @@ CREATE TABLE IF NOT EXISTS game_history (
     created_at timestamp 
 );
 """
+
+
+def get_blank_weights(opponent_name, opponent_char) -> str:
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    # cur = conn.cursor()
+    weights = conn.execute("SELECT weights FROM board_states WHERE config like '.........'").fetchone()[0]
+    print(f'weights: {weights}')
+    conn.close()
+    return weights
+
+
+def get_last_blank_weights(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    weights = conn.execute("SELECT blank_weights FROM game_history ORDER BY game_number DESC LIMIT 1").fetchone()[0]
+    print(f'most recent weights: {weights}')
+    conn.close()
+    return weights
+
+
+def get_blank_weights_from_history(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    weights = conn.execute("SELECT blank_weights FROM game_history").fetchall()
+    print(f'weights type {type(weights)}')
+    print(f'most recent weights: {weights}')
+    conn.close()
+    # convert weights strings to tuples
+    weights_iterables = []
+
+    for weights_tuple in weights:
+        weights_string = weights_tuple[0]
+        weights_iterable = iterable_from_weights(weights_string)
+        weights_iterables.append(weights_iterable)
+
+    return weights_iterables
 
 
 def create_board_states_table(opponent_name, opponent_char):

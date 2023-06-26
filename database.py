@@ -185,12 +185,9 @@ def get_last_blank_weights(opponent_name, opponent_char):
 def get_blank_weights_from_history(opponent_name, opponent_char):
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     weights = conn.execute("SELECT blank_weights FROM game_history").fetchall()
-    print(f'weights type {type(weights)}')
-    print(f'most recent weights: {weights}')
     conn.close()
-    # convert weights strings to tuples
+    # convert weights strings to iterables
     weights_iterables = []
-
     for weights_tuple in weights:
         weights_string = weights_tuple[0]
         weights_iterable = iterable_from_weights(weights_string)

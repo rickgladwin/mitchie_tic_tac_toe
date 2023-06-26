@@ -52,8 +52,6 @@ def update_db_board_state(conn, config, position, weight_delta):
 
 def update_game_history(opponent_name, opponent_char, opponent_game_result, final_blank_weights) -> None:
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
-    # conn.cursor().execute("INSERT INTO game_history (blank_weights, result, created_at) VALUES (" + final_blank_weights + ", " + opponent_game_result + ", " + str(datetime.now()) + ")")
     conn.cursor().execute("INSERT INTO game_history (blank_weights, result, created_at) VALUES ('" + final_blank_weights + "', '" + opponent_game_result + "', '" + str(datetime.now()) + "')")
-    # conn.cursor().execute("INSERT INTO game_history (blank_weights, result, created_at) VALUES ('" + final_blank_weights + "', 'win', '" + str(datetime.now()) + "')")
     conn.commit()
     conn.close()

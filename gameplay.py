@@ -147,10 +147,10 @@ def winning_play(current_board_config, player_char):
     # winning play is a row, column, or diagonal with 2 of player_char and 1 blank
 
     # check first row
-    player_chars_in_row = len([position for position in current_board_config[:3] if position == player_char])
+    player_chars_in_row = len([position for position in current_board_config[0:3] if position == player_char])
     if player_chars_in_row == 2 and settings['blank_char'] in current_board_config[0:3]:
         blank_char_index = current_board_config[0:3].index(settings['blank_char'])
-        return str(blank_char_index + 1)
+        return str(blank_char_index + 0 + 1)
 
     # check second row
     player_chars_in_row = len([position for position in current_board_config[3:6] if position == player_char])

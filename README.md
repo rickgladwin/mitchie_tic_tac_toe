@@ -16,14 +16,15 @@ reinforcement and feedback.
 
 https://en.wikipedia.org/wiki/Matchbox_Educable_Noughts_and_Crosses_Engine
 
-![Antique robots playing a board game](assets/antique_game_players_1.jpg)
-_"I belong in a museum, not playing against this idiot."_ 
-
 ### This repo
 This repo is a python implementation of the algorithm and principles employed in MENACE, exploring methods for
 storing the state of an AI's training in a persistence layer (a sqlite database, as of this writing),
 efficient methods for making decisions based on the training, and methods for training the AI based on
 game outcomes.
+
+![Antique robots playing a board game](assets/antique_game_players_1.jpg)
+
+_"I belong in a museum, not playing against this idiot."_
 
 Internally, the game board is represented as a string or list of 9 characters, indexed as follows:
 

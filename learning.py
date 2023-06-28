@@ -4,7 +4,7 @@ from database import create_connection, config_from_iterable
 from settings import settings
 
 
-def update_db_weights(opponent_name, opponent_char, game_thread, winning_char=None):
+def update_db_weights(opponent_name: str, opponent_char: str, game_thread: iter, winning_char: str = None):
     """
     Update weights of playable positions in board_states based on game_thread
     :param str opponent_name: db identifier for opponent

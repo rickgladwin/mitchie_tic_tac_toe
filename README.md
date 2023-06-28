@@ -16,6 +16,9 @@ reinforcement and feedback.
 
 https://en.wikipedia.org/wiki/Matchbox_Educable_Noughts_and_Crosses_Engine
 
+![Antique robots playing a board game](assets/antique_game_players_1.jpg)
+_"I belong in a museum, not playing against this idiot."_ 
+
 ### This repo
 This repo is a python implementation of the algorithm and principles employed in MENACE, exploring methods for
 storing the state of an AI's training in a persistence layer (a sqlite database, as of this writing),
@@ -146,3 +149,10 @@ CNNs that are overtrained with too many hidden layers.
 - make two AIs play against each other, and see how their strategies evolve
 - study the ways in which the asymmetries in the weights on the blank config emerge under
 different training conditions, algorithms, and methods
+
+## Assets
+assets/antique_game_players_1.jpg
+
+Imagine V4 Prompt: _an antique robot made of brass and copper sits at a small games table. 
+On the table is a tic tac toe game. The robot is looking at the game. Across from the robot 
+is a small human child. The child is waiting for the robot to play._ 

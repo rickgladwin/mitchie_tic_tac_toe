@@ -9,13 +9,13 @@ from settings import settings
 
 
 def main():
-    rounds_to_play = 100
+    rounds_to_play = 1
 
     # print the game progress and states to the console?
     display_this_game = True
 
     # generate random plays for the human player?
-    generate_random_plays = True
+    generate_random_plays = False
 
     while rounds_to_play > 0:
         game_loop(
@@ -33,9 +33,11 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
 
     # initialize opponent
     # opponent_name = 'opponent_1'  # trained against human
-    # opponent_name = 'opponent_2'  # trained against (mostly) random
+    opponent_name = 'opponent_2'  # trained against (mostly) random
     # opponent_name = 'opponent_3'  # trained against random with "winning play" awareness, with upper weight limit 5000
-    opponent_name = 'opponent_4'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_4'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_5'  # trained 100 + 30_000 rounds against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_6'  # trained 100 + 30_000 rounds against random with "winning play" awareness, with upper weight limit float('inf')
     opponent_char = 'X'
 
     # initialize human

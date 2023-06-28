@@ -1,21 +1,29 @@
 import random
+from enum import Enum
+
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
-    forget_all_board_states
+    forget_all_board_states, create_game_history_table, select_board_state
 from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays, \
     winning_play, choose_next_human_play
 from interaction import print_board_simple, print_game_thread, clear_screen
-from learning import update_db_weights
+from learning import update_db_weights, update_game_history
 from settings import settings
 
 
+class GameResults(str, Enum):
+    WIN = 'win',
+    LOSS = 'loss',
+    DRAW = 'draw',
+
+
 def main():
-    rounds_to_play = 1
+    rounds_to_play = 5000
 
     # print the game progress and states to the console?
-    display_this_game = True
+    display_this_game = False
 
     # generate random plays for the human player?
-    generate_random_plays = False
+    generate_random_plays = True
 
     while rounds_to_play > 0:
         game_loop(
@@ -33,11 +41,14 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
 
     # initialize opponent
     # opponent_name = 'opponent_1'  # trained against human
-    opponent_name = 'opponent_2'  # trained against (mostly) random
+    # opponent_name = 'opponent_2'  # trained against (mostly) random
     # opponent_name = 'opponent_3'  # trained against random with "winning play" awareness, with upper weight limit 5000
     # opponent_name = 'opponent_4'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     # opponent_name = 'opponent_5'  # trained 100 + 30_000 rounds against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_7'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_8'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     # opponent_name = 'opponent_6'  # trained 100 + 30_000 rounds against random with "winning play" awareness, with upper weight limit float('inf')
+    opponent_name = 'opponent_9'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     opponent_char = 'X'
 
     # initialize human
@@ -48,6 +59,7 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # forget_all_board_states(opponent_name, opponent_char)
 
     create_board_states_table(opponent_name, opponent_char)
+    create_game_history_table(opponent_name, opponent_char)
 
     # initialize game with starting game state
     initial_config = [settings['blank_char']] * 9
@@ -104,29 +116,6 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
 
         next_play = choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game, human_plays_randomly)
 
-        # input_is_valid = False
-        # while not input_is_valid:
-        #     if display_game:
-        #         print('Your turn. Enter a number from 1 to 9 to indicate your play position. Q to quit')
-        #         print(f'Valid plays: {valid_plays}')
-        #     if human_plays_randomly:
-        #         play_for_win = winning_play(current_board_config, human_char)
-        #         if play_for_win is not None:
-        #             player_input = play_for_win
-        #         else:
-        #             player_input = valid_plays[random.randint(0, len(valid_plays) - 1)]
-        #     else:
-        #         player_input = input()
-        #     if player_input == 'Q' or player_input == 'q':
-        #         print('Thanks for playing!')
-        #         return
-        #     if player_input not in valid_plays:
-        #         print('Invalid input.')
-        #         continue
-        #     # player input is 1-indexed, but the board config is 0-indexed
-        #     next_play = int(player_input) - 1
-        #     input_is_valid = True
-
         new_board_config = play(next_play, opponent_name, human_char, current_board_config)
         # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
         #  and we don't need to train the AI on *ITS* opponent's moves.
@@ -153,16 +142,27 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
         if display_game:
             print('You lose.')
         winning_char = opponent_char
+        opponent_game_result = GameResults.WIN.value
     if player_wins(current_board_config, human_char):
         if display_game:
             print('You win!')
         winning_char = human_char
+        opponent_game_result = GameResults.LOSS.value
     if game_is_drawn(current_board_config):
         if display_game:
             print('Draw.')
+        opponent_game_result = GameResults.DRAW.value
 
     # update database weights with game results
     update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
+    # add game to game history
+    blank_board_state = select_board_state(opponent_name, opponent_char, '.........')
+    # print(f'blank_board_state: {blank_board_state}')
+    _, blank_weights, _ = blank_board_state
+    # print(f'blank_weights: {blank_weights}')
+    # print(f'type(opponent_game_result): {type(opponent_game_result)}')
+    # print(f'opponent_game_result: {opponent_game_result}')
+    update_game_history(opponent_name, opponent_char, opponent_game_result, blank_weights)
 
     if not display_game:
         clear_screen()

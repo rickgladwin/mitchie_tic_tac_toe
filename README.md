@@ -141,7 +141,7 @@ and other more complex models – the complexity may be overkill in some situati
 CNNs that are overtrained with too many hidden layers.
 
 ## Next Steps:
-- create visualizations for the state of the AI's training over time
+- <span style="color: lightgreen;">✓</span> create visualizations for the state of the AI's training over time
 - create visualizations for the gameplay itself (currently outputs to the console)
 - make two AIs play against each other, and see how their strategies evolve
 - study the ways in which the asymmetries in the weights on the blank config emerge under

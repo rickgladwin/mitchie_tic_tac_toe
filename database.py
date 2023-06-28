@@ -39,8 +39,6 @@ def board_state_from_iterables(config, weights, nexts):
 
     board_state = (config_string, weights_string, nexts_string)
 
-    # print(f'board_state: {board_state}')
-
     return board_state
 
 
@@ -51,13 +49,11 @@ def insert_board_state(conn, board_state):
     :param board_state: tuple of (config, weights, nexts)
     """
     config, weights, nexts = board_state
-    # print(f'inserting board_state: {board_state}')
     sql = ''' INSERT INTO board_states(config,weights,nexts)
               VALUES(?,?,?) '''
     cur = conn.cursor()
     try:
         cur.execute(sql, board_state)
-        # print(f'----- inserted board_state: {board_state}')
     except sqlite3.IntegrityError as e:
         if 'UNIQUE constraint failed' in str(e):
             # print(f'board_state exists: {board_state}')
@@ -70,8 +66,6 @@ def insert_board_state(conn, board_state):
         print('Did you remember to convert the iterables to strings?')
     conn.commit()
 
-    # print(f'cur.lastrowid: {cur.lastrowid}')
-
 
 def insert_fresh_board_state(opponent_name, opponent_char, config):
     """
@@ -82,7 +76,6 @@ def insert_fresh_board_state(opponent_name, opponent_char, config):
     """
     config_string = config_from_iterable(config)
     state_weights = list(map(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'], config))
-    # state_weights = list(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'] for x in config)
 
     # print(f'state_weights: {state_weights}')
     initial_weights = weights_from_iterable(state_weights)
@@ -101,6 +94,11 @@ def config_from_iterable(config):
 def weights_from_iterable(weights):
     weights_string = ','.join(list(map(str, weights)))
     return weights_string
+
+
+def iterable_from_weights(weights: str):
+    iterable = [int(x) for x in weights.split(',')]
+    return iterable
 
 
 def nexts_from_iterable(nexts):
@@ -134,8 +132,6 @@ def select_board_state(opponent_name, opponent_char, config):
 
         insert_board_state(conn, board_state)
 
-    # print(f'board_state: {board_state}')
-
     conn.close()
 
     return board_state
@@ -150,9 +146,55 @@ CREATE TABLE IF NOT EXISTS board_states (
 """
 
 
+create_game_history_table_sql = """
+CREATE TABLE IF NOT EXISTS game_history (
+    game_number INTEGER PRIMARY KEY, 
+    blank_weights blob, -- value of 'weights' column for '.........' config
+    result text, -- 'win', 'loss', 'draw' for this player
+    created_at timestamp 
+);
+"""
+
+
+def get_blank_weights(opponent_name, opponent_char) -> str:
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    weights = conn.execute("SELECT weights FROM board_states WHERE config like '.........'").fetchone()[0]
+    print(f'weights: {weights}')
+    conn.close()
+    return weights
+
+
+def get_last_blank_weights(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    weights = conn.execute("SELECT blank_weights FROM game_history ORDER BY game_number DESC LIMIT 1").fetchone()[0]
+    print(f'most recent weights: {weights}')
+    conn.close()
+    return weights
+
+
+def get_blank_weights_from_history(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    weights = conn.execute("SELECT blank_weights FROM game_history").fetchall()
+    conn.close()
+    # convert weights strings to iterables
+    weights_iterables = []
+    for weights_tuple in weights:
+        weights_string = weights_tuple[0]
+        weights_iterable = iterable_from_weights(weights_string)
+        weights_iterables.append(weights_iterable)
+
+    return weights_iterables
+
+
 def create_board_states_table(opponent_name, opponent_char):
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     create_table(conn, create_board_states_table_sql)
+    conn.close()
+
+
+def create_game_history_table(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    create_table(conn, create_game_history_table_sql)
     conn.close()
 
 
@@ -160,6 +202,14 @@ def forget_all_board_states(opponent_name, opponent_char):
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     cur = conn.cursor()
     cur.execute('DELETE FROM board_states')
+    conn.commit()
+    conn.close()
+
+
+def forget_all_game_history(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    cur = conn.cursor()
+    cur.execute('DELETE FROM game_history')
     conn.commit()
     conn.close()
 

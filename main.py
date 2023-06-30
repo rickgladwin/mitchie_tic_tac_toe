@@ -51,6 +51,10 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     opponent_name = 'opponent_9'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     opponent_char = 'X'
 
+    # initialize opponent 2
+    opponent_2_name = 'opponent_10'
+    opponent_2_char = 'O'
+
     # initialize human
     human_name = 'human'
     human_char = 'O'
@@ -58,8 +62,12 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # reset opponent
     # forget_all_board_states(opponent_name, opponent_char)
 
+    # set up ai databases if they don't exist
     create_board_states_table(opponent_name, opponent_char)
     create_game_history_table(opponent_name, opponent_char)
+
+    create_board_states_table(opponent_2_name, opponent_2_char)
+    create_game_history_table(opponent_2_name, opponent_2_char)
 
     # initialize game with starting game state
     initial_config = [settings['blank_char']] * 9
@@ -69,6 +77,9 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     # add initial game state to database
     connection = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     insert_board_state(connection, board_state_from_iterables(initial_config, initial_weights, initial_next))
+
+    connection_2 = create_connection('sqlite/' + opponent_2_name + '_' + opponent_2_char + '.db')
+    insert_board_state(connection_2, board_state_from_iterables(initial_config, initial_weights, initial_next))
 
     # get initial game state
     current_board_config = initial_config

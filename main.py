@@ -2,7 +2,7 @@ import random
 from enum import Enum
 
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
-    forget_all_board_states, create_game_history_table, select_board_state
+    forget_all_board_states, create_game_history_table, select_board_state, count_seen_states
 from gameplay import choose_next_play, play, player_wins, game_is_drawn, game_is_over, current_valid_plays, \
     winning_play, choose_next_human_play
 from interaction import print_board_simple, print_game_thread, clear_screen
@@ -51,14 +51,20 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # opponent_name = 'opponent_9'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     # opponent_char = 'X'
 
-    opponent_name = 'opponent_12'  # trained against fresh opponent AI
-    opponent_char = 'X'
+    # opponent_name = 'opponent_12'  # trained against fresh opponent AI
+    # opponent_char = 'X'
 
     # initialize opponent 2
     # opponent_2_name = 'opponent_10'  # trained against opponent AI, 11 rounds
     # opponent_2_char = 'O'
 
-    opponent_2_name = 'opponent_11'  # trained against fresh opponent AI
+    # opponent_2_name = 'opponent_11'  # trained against fresh opponent AI
+    # opponent_2_char = 'O'
+
+    opponent_name = 'opponent_13'  # trained against fresh opponent AI
+    opponent_char = 'X'
+
+    opponent_2_name = 'opponent_14'  # trained against fresh opponent AI
     opponent_2_char = 'O'
 
 
@@ -192,13 +198,18 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
 
     # add game to game history
     blank_board_state = select_board_state(player_1_name, player_1_char, '.........')
+    blank_board_state_2 = select_board_state(player_2_name, player_2_char, '.........')
     # print(f'blank_board_state: {blank_board_state}')
     _, blank_weights, _ = blank_board_state
+    _, blank_weights_2, _ = blank_board_state_2
+
+    seen_board_states_count = count_seen_states(player_1_name, player_1_char)
+    seen_board_states_count_2 = count_seen_states(player_2_name, player_2_char)
     # print(f'blank_weights: {blank_weights}')
     # print(f'type(opponent_game_result): {type(opponent_game_result)}')
     # print(f'opponent_game_result: {opponent_game_result}')
-    update_game_history(player_1_name, player_1_char, player_1_game_result, blank_weights)
-    update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights)
+    update_game_history(player_1_name, player_1_char, player_1_game_result, blank_weights, seen_board_states_count)
+    update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights_2, seen_board_states_count_2)
 
     if not display_game:
         clear_screen()

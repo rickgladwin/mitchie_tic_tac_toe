@@ -17,7 +17,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 10
+    rounds_to_play = 1000
 
     # print the game progress and states to the console?
     display_this_game = True
@@ -48,12 +48,19 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # opponent_name = 'opponent_7'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     # opponent_name = 'opponent_8'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
     # opponent_name = 'opponent_6'  # trained 100 + 30_000 rounds against random with "winning play" awareness, with upper weight limit float('inf')
-    opponent_name = 'opponent_9'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_name = 'opponent_9'  # trained against random with "winning play" awareness, with upper weight limit float('inf')
+    # opponent_char = 'X'
+
+    opponent_name = 'opponent_12'  # trained against fresh opponent AI
     opponent_char = 'X'
 
     # initialize opponent 2
-    opponent_2_name = 'opponent_10' # trained against opponent AI
+    # opponent_2_name = 'opponent_10'  # trained against opponent AI, 11 rounds
+    # opponent_2_char = 'O'
+
+    opponent_2_name = 'opponent_11'  # trained against fresh opponent AI
     opponent_2_char = 'O'
+
 
     # initialize human
     human_name = 'human'

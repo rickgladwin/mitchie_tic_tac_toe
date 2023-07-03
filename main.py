@@ -17,7 +17,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 100
+    rounds_to_play = 10
 
     # print the game progress and states to the console?
     display_this_game = True
@@ -29,14 +29,14 @@ def main():
         game_loop(
             display_game=display_this_game,
             rounds_remaining=rounds_to_play,
-            human_plays_randomly=generate_random_plays
+            automate_player_2=generate_random_plays
         )
         rounds_to_play -= 1
 
     print('done')
 
 
-def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False):
+def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # print('starting new game...')
 
     # initialize opponent
@@ -52,7 +52,7 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     opponent_char = 'X'
 
     # initialize opponent 2
-    opponent_2_name = 'opponent_10'
+    opponent_2_name = 'opponent_10' # trained against opponent AI
     opponent_2_char = 'O'
 
     # initialize human
@@ -97,13 +97,22 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     player_playing_next = opponent_name
     next_character = opponent_char
 
+    player_1_name = opponent_name
+    player_1_char = opponent_char
+    if automate_player_2:
+        player_2_name = opponent_2_name
+        player_2_char = opponent_2_char
+    else:
+        player_2_name = human_name
+        player_2_char = human_char
+
     while not current_game_is_over:
         # opponent plays first
-        next_play = choose_next_play(opponent_name, opponent_char, current_board_config)
-        new_board_config = play(next_play, opponent_name, opponent_char, current_board_config)
+        next_play = choose_next_play(player_1_name, player_1_char, current_board_config)
+        new_board_config = play(next_play, player_1_name, player_1_char, current_board_config)
 
         # register opponent's play in game thread
-        game_thread.append((current_board_config, opponent_name, opponent_char, next_play))
+        game_thread.append((current_board_config, player_1_name, player_1_char, next_play))
 
         current_board_config = new_board_config
 
@@ -120,18 +129,20 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
                 print('@@@ Game over @@@')
             break
 
-        # human plays next
-        #  prompt for play position (rather than choose_next_play())
-        #  everything else is the same
-        valid_plays = current_valid_plays(current_board_config)
+        if automate_player_2:
+            next_play = choose_next_play(player_2_name, player_2_char, current_board_config)
+        else:
+            # human plays next
+            #  prompt for play position (rather than choose_next_play())
+            #  everything else is the same
+            valid_plays = current_valid_plays(current_board_config)
+            next_play = choose_next_human_play(valid_plays, player_2_name, player_2_char, current_board_config, display_game, automate_player_2)
 
-        next_play = choose_next_human_play(valid_plays, human_name, human_char, current_board_config, display_game, human_plays_randomly)
-
-        new_board_config = play(next_play, opponent_name, human_char, current_board_config)
+        new_board_config = play(next_play, player_2_name, player_2_char, current_board_config)
         # update the db with the new board state (after AI and human play) – NOTE: choose_next_play() does this,
         #  and we don't need to train the AI on *ITS* opponent's moves.
         #  Although we could. Maybe as a next version. Let the AI learn what the human did to win.
-        game_thread.append((current_board_config, opponent_name, human_char, next_play))
+        game_thread.append((current_board_config, player_2_name, player_2_char, next_play))
         current_board_config = new_board_config
 
         if display_game:
@@ -149,43 +160,61 @@ def game_loop(display_game=False, rounds_remaining=1, human_plays_randomly=False
     winning_char = None
 
     # check winner, loser, or draw
-    if player_wins(current_board_config, opponent_char):
+    if player_wins(current_board_config, player_1_char):
         if display_game:
             print('You lose.')
-        winning_char = opponent_char
-        opponent_game_result = GameResults.WIN.value
-    if player_wins(current_board_config, human_char):
+        winning_char = player_1_char
+        player_1_game_result = GameResults.WIN.value
+        player_2_game_result = GameResults.LOSS.value
+    if player_wins(current_board_config, player_2_char):
         if display_game:
             print('You win!')
-        winning_char = human_char
-        opponent_game_result = GameResults.LOSS.value
+        winning_char = player_2_char
+        player_1_game_result = GameResults.LOSS.value
+        player_2_game_result = GameResults.WIN.value
     if game_is_drawn(current_board_config):
         if display_game:
             print('Draw.')
-        opponent_game_result = GameResults.DRAW.value
+        player_1_game_result = GameResults.DRAW.value
+        player_2_game_result = GameResults.DRAW.value
 
     # update database weights with game results
-    update_db_weights(opponent_name, opponent_char, game_thread, winning_char)
+    update_db_weights(player_1_name, player_1_char, game_thread, winning_char)
+    if automate_player_2:
+        update_db_weights(player_2_name, player_2_char, game_thread, winning_char)
+
     # add game to game history
-    blank_board_state = select_board_state(opponent_name, opponent_char, '.........')
+    blank_board_state = select_board_state(player_1_name, player_1_char, '.........')
     # print(f'blank_board_state: {blank_board_state}')
     _, blank_weights, _ = blank_board_state
     # print(f'blank_weights: {blank_weights}')
     # print(f'type(opponent_game_result): {type(opponent_game_result)}')
     # print(f'opponent_game_result: {opponent_game_result}')
-    update_game_history(opponent_name, opponent_char, opponent_game_result, blank_weights)
+    update_game_history(player_1_name, player_1_char, player_1_game_result, blank_weights)
+    update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights)
 
     if not display_game:
         clear_screen()
         print(f'rounds_remaining: {rounds_remaining - 1}')
 
-    if not human_plays_randomly:
+    if not automate_player_2:
         input('Press any key to continue.')
 
     # end game or start new game
     # TODO: allow for ai to play first
     # TODO: ensure game_thread, board_states update, and learning works for ai playing first
     # TODO: display learning progress, game count, game results, etc.
+
+
+# def play_ai_round(opponent_name: str, opponent_char: str, current_board_config: iter) -> None:
+#     # opponent plays first
+#     next_play = choose_next_play(opponent_name, opponent_char, current_board_config)
+#     new_board_config = play(next_play, opponent_name, opponent_char, current_board_config)
+#
+#     # register opponent's play in game thread
+#     game_thread.append((current_board_config, opponent_name, opponent_char, next_play))
+#
+#     current_board_config = new_board_config
 
 
 if __name__ == "__main__":

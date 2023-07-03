@@ -17,10 +17,10 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 5000
+    rounds_to_play = 100_000
 
     # print the game progress and states to the console?
-    display_this_game = True
+    display_this_game = False
 
     # generate random plays for the human player?
     generate_random_plays = True

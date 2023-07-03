@@ -30,7 +30,7 @@ def weight_sums_from_history(blank_weights: list[iter]) -> list[int]:
 
 if __name__ == '__main__':
     # opponent_name = 'opponent_8'
-    test_opponent_name = 'opponent_9'
+    test_opponent_name = 'opponent_12'
     test_opponent_char = 'X'
 
     draw_blank_weights_over_time(test_opponent_name, test_opponent_char)

@@ -69,7 +69,7 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # reset opponent
     # forget_all_board_states(opponent_name, opponent_char)
 
-    # set up ai databases if they don't exist
+    # set up AI databases if they don't exist
     create_board_states_table(opponent_name, opponent_char)
     create_game_history_table(opponent_name, opponent_char)
 
@@ -90,15 +90,9 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
 
     # get initial game state
     current_board_config = initial_config
-    # print(f'current (starting) board state:')
-    # print_board_simple(current_board_config)
 
     # initialize game thread (a list of board states and plays)
     game_thread = []
-
-    # clear_screen()
-    # print_board_simple(current_board_config)
-    # print_game_thread(game_thread)
 
     current_game_is_over = False
     player_playing_next = opponent_name

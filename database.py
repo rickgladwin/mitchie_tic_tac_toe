@@ -150,6 +150,7 @@ create_game_history_table_sql = """
 CREATE TABLE IF NOT EXISTS game_history (
     game_number INTEGER PRIMARY KEY, 
     blank_weights blob, -- value of 'weights' column for '.........' config
+    seen_states_count int, -- number of board states seen at this point in history
     result text, -- 'win', 'loss', 'draw' for this player
     created_at timestamp 
 );
@@ -186,6 +187,16 @@ def get_blank_weights_from_history(opponent_name, opponent_char):
     return weights_iterables
 
 
+def get_seen_states_from_history(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    seen_states_counts = conn.execute("SELECT seen_states_count FROM game_history").fetchall()
+    conn.close()
+    # convert seen states counts to iterable
+    seen_states = [int(x[0]) for x in seen_states_counts]
+
+    return seen_states
+
+
 def create_board_states_table(opponent_name, opponent_char):
     conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     create_table(conn, create_board_states_table_sql)
@@ -214,6 +225,12 @@ def forget_all_game_history(opponent_name, opponent_char):
     conn.close()
 
 
+def count_seen_states(opponent_name, opponent_char):
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+    seen_states = conn.execute("SELECT count(*) FROM board_states").fetchone()[0]
+    return seen_states
+
+
 if __name__ == '__main__':
     # connection = create_connection('./sqlite/db_1.db')
     # create_table(connection, create_board_states_table_sql)
@@ -233,3 +250,9 @@ if __name__ == '__main__':
     insert_board_state(connection, board_state_from_iterables(initial_config, init_weights, init_next))
 
     connection.close()
+
+    test_opponent_name = 'opponent_13'
+    test_opponent_char = 'X'
+
+    result = get_seen_states_from_history(test_opponent_name, test_opponent_char)
+    print(f'last seen_states: {list(set(result))[-10:]}')

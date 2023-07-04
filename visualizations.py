@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from database import get_blank_weights, iterable_from_weights, get_blank_weights_from_history
+from database import get_blank_weights, iterable_from_weights, get_blank_weights_from_history, \
+    get_seen_states_from_history
 from settings import settings
 
 
@@ -28,7 +29,8 @@ def draw_blank_weights_over_time(opponent_name, opponent_char) -> None:
     # print(f'last x_best: {x_best[-10:]}')
     # print(f'last y_best: {y_best[-10:]}')
     # print(f'a,b: {a}, {b}')
-    plt.plot(x, a*x + b)
+    plt.plot(x, a*x + b, label=f'slope of last {latest_range} points: {round(a,2)}')
+    plt.legend()
 
     plt.show()
 
@@ -40,10 +42,28 @@ def weight_sums_from_history(blank_weights: list[iter]) -> list[int]:
     return weight_sums
 
 
+def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
+    seen_states_history = get_seen_states_from_history(opponent_name, opponent_char)
+    # add the initial (pre games) weights
+
+    x = np.array(range(0, len(seen_states_history)))
+    y = np.array(seen_states_history)
+
+    fig, ax = plt.subplots()
+    ax.set_title(f'{opponent_name}_{opponent_char} seen board states')
+    ax.set_xlabel('game number')
+    ax.set_ylabel('seen board states')
+    ax.plot(x, y)
+
+    plt.show()
+
+
 if __name__ == '__main__':
     # opponent_name = 'opponent_8'
-    test_opponent_name = 'opponent_12'
+    test_opponent_name = 'opponent_13'
     test_opponent_char = 'X'
 
     draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
+
+    draw_seen_states_count_over_time(test_opponent_name, test_opponent_char)
 

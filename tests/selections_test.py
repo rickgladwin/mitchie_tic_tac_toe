@@ -78,13 +78,22 @@ class TestMoveSelection:
             result = select_move(test_weights)
             assert (result != 2)
 
+    def test_never_selects_either_move_with_weight_zero(self):
+        test_weights = [50, 0, 10, 0, 50]
+        # call select_move 100 times and check that it never returns 2
+        for i in range(0, 100):
+            result = select_move(test_weights)
+            assert (result != 1)
+            assert (result != 3)
+
     def test_selects_moves_with_rates_matching_weights(self):
         test_weights = [0, 0, 50, 24, 0, 50, 0, 10, 5, 60, 0]
         results = [0] * len(test_weights)
         total_trials = 1000
+        print(f'\ntotal_trials: {total_trials}')
         result_deviation_threshold_percent = 5
         result_deviation_threshold = result_deviation_threshold_percent / math.sqrt(total_trials)
-        print(f'\nresult_deviation_threshold: {result_deviation_threshold}')
+        print(f'result_deviation_threshold: {result_deviation_threshold}')
         for i in range(0, total_trials):
             results[select_move(test_weights)] += 1
 

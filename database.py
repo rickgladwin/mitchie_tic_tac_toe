@@ -32,7 +32,6 @@ def board_state_from_iterables(config, weights, nexts):
     :param nexts: iterable next possible board states
     :return: board_state
     """
-
     config_string = config_from_iterable(config)
     weights_string = weights_from_iterable(weights)
     nexts_string = nexts_from_iterable(nexts)
@@ -48,7 +47,6 @@ def insert_board_state(conn, board_state):
     :param conn: connection object
     :param board_state: tuple of (config, weights, nexts)
     """
-    config, weights, nexts = board_state
     sql = ''' INSERT INTO board_states(config,weights,nexts)
               VALUES(?,?,?) '''
     cur = conn.cursor()
@@ -77,8 +75,6 @@ def insert_fresh_board_state(opponent_name, opponent_char, config):
     config_string = config_from_iterable(config)
     state_weights = list(map(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'], config))
 
-    # print(f'state_weights: {state_weights}')
-    initial_weights = weights_from_iterable(state_weights)
     initial_next = nexts_from_iterable([])
     board_state = (config_string, state_weights, initial_next)
 
@@ -125,7 +121,6 @@ def select_board_state(opponent_name, opponent_char, config):
 
     if not board_state:
         state_weights = list(map(lambda x: 0 if x != settings['blank_char'] else settings['init_weight'], config))
-        # initial_weights = weights_from_iterable([10] * 9)
         state_weights = weights_from_iterable(state_weights)
         initial_next = nexts_from_iterable([])
         board_state = (config_string, state_weights, initial_next)

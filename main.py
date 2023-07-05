@@ -17,13 +17,13 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 100_000
+    rounds_to_play = 10_000
 
     # print the game progress and states to the console?
-    display_this_game = False
+    display_this_game = True
 
     # generate random plays for the human player?
-    generate_random_plays = True
+    generate_random_plays = False
 
     while rounds_to_play > 0:
         game_loop(
@@ -61,15 +61,20 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # opponent_2_name = 'opponent_11'  # trained against fresh opponent AI
     # opponent_2_char = 'O'
 
-    opponent_name = 'opponent_13'  # trained against fresh opponent AI
+    # opponent_name = 'opponent_13'  # trained against fresh opponent AI
+    # opponent_char = 'X'
+
+    # opponent_2_name = 'opponent_14'  # trained against fresh opponent AI
+    # opponent_2_char = 'O'
+
+    opponent_name = 'baby_opponent'  # a stupid baby
     opponent_char = 'X'
 
-    opponent_2_name = 'opponent_14'  # trained against fresh opponent AI
-    opponent_2_char = 'O'
-
+    # opponent_2_name = 'another_baby_opponent'  # another dumb baby
+    # opponent_2_char = 'O'
 
     # initialize human
-    human_name = 'human'
+    human_name = 'human'  # you, you friggin champion
     human_char = 'O'
 
     # reset opponent
@@ -79,8 +84,9 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     create_board_states_table(opponent_name, opponent_char)
     create_game_history_table(opponent_name, opponent_char)
 
-    create_board_states_table(opponent_2_name, opponent_2_char)
-    create_game_history_table(opponent_2_name, opponent_2_char)
+    if automate_player_2:
+        create_board_states_table(opponent_2_name, opponent_2_char)
+        create_game_history_table(opponent_2_name, opponent_2_char)
 
     # initialize game with starting game state
     initial_config = [settings['blank_char']] * 9
@@ -91,8 +97,9 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     connection = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
     insert_board_state(connection, board_state_from_iterables(initial_config, initial_weights, initial_next))
 
-    connection_2 = create_connection('sqlite/' + opponent_2_name + '_' + opponent_2_char + '.db')
-    insert_board_state(connection_2, board_state_from_iterables(initial_config, initial_weights, initial_next))
+    if automate_player_2:
+        connection_2 = create_connection('sqlite/' + opponent_2_name + '_' + opponent_2_char + '.db')
+        insert_board_state(connection_2, board_state_from_iterables(initial_config, initial_weights, initial_next))
 
     # get initial game state
     current_board_config = initial_config
@@ -192,18 +199,15 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
 
     # add game to game history
     blank_board_state = select_board_state(player_1_name, player_1_char, '.........')
-    blank_board_state_2 = select_board_state(player_2_name, player_2_char, '.........')
-    # print(f'blank_board_state: {blank_board_state}')
     _, blank_weights, _ = blank_board_state
-    _, blank_weights_2, _ = blank_board_state_2
-
     seen_board_states_count = count_seen_states(player_1_name, player_1_char)
-    seen_board_states_count_2 = count_seen_states(player_2_name, player_2_char)
-    # print(f'blank_weights: {blank_weights}')
-    # print(f'type(opponent_game_result): {type(opponent_game_result)}')
-    # print(f'opponent_game_result: {opponent_game_result}')
     update_game_history(player_1_name, player_1_char, player_1_game_result, blank_weights, seen_board_states_count)
-    update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights_2, seen_board_states_count_2)
+
+    if automate_player_2:
+        blank_board_state_2 = select_board_state(player_2_name, player_2_char, '.........')
+        _, blank_weights_2, _ = blank_board_state_2
+        seen_board_states_count_2 = count_seen_states(player_2_name, player_2_char)
+        update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights_2, seen_board_states_count_2)
 
     if not display_game:
         clear_screen()
@@ -213,7 +217,7 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
         input('Press any key to continue.')
 
     # end game or start new game
-    # TODO: allow for ai to play first
+    # TODO: allow for either ai to play first
     # TODO: ensure game_thread, board_states update, and learning works for ai playing first
     # TODO: display learning progress, game count, game results, etc.
 

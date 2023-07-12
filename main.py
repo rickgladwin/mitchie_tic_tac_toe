@@ -1,3 +1,4 @@
+import datetime
 import random
 from enum import Enum
 
@@ -17,13 +18,16 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 10_000
+    rounds_to_play = 400_000
+    total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
-    display_this_game = True
+    display_this_game = False
 
     # generate random plays for the human player?
-    generate_random_plays = False
+    generate_random_plays = True
+
+    start_time = datetime.datetime.now()
 
     while rounds_to_play > 0:
         game_loop(
@@ -34,6 +38,9 @@ def main():
         rounds_to_play -= 1
 
     print('done')
+    end_time = datetime.datetime.now()
+    elapsed_time = end_time - start_time
+    print(f'time for {total_rounds} rounds: {elapsed_time}')
 
 
 def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
@@ -67,8 +74,14 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # opponent_2_name = 'opponent_14'  # trained against fresh opponent AI
     # opponent_2_char = 'O'
 
-    opponent_name = 'baby_opponent'  # a stupid baby
+    # opponent_name = 'baby_opponent'  # a stupid baby
+    # opponent_char = 'X'
+
+    opponent_name = 'long_opponent_1'  # a stupid baby
     opponent_char = 'X'
+
+    opponent_2_name = 'long_opponent_2'  # a stupid baby
+    opponent_2_char = 'O'
 
     # opponent_2_name = 'another_baby_opponent'  # another dumb baby
     # opponent_2_char = 'O'
@@ -209,9 +222,9 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
         seen_board_states_count_2 = count_seen_states(player_2_name, player_2_char)
         update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights_2, seen_board_states_count_2)
 
-    if not display_game:
+    if rounds_remaining % 1024 == 0 and not display_game:
         clear_screen()
-        print(f'rounds_remaining: {rounds_remaining - 1}')
+        print(f'rounds_remaining: {rounds_remaining} or fewer')
 
     if not automate_player_2:
         input('Press any key to continue.')

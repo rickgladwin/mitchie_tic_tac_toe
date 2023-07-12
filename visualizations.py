@@ -57,10 +57,28 @@ def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
 
     plt.show()
 
+# example game_thread:
+# (['.', '.', '.', '.', '.', '.', '.', '.', '.'], 'opponent_13', 'X', 4)
+# (['.', '.', '.', '.', 'X', '.', '.', '.', '.'], 'human', 'O', 0)
+# (['O', '.', '.', '.', 'X', '.', '.', '.', '.'], 'opponent_13', 'X', 2)
+# (['O', '.', 'X', '.', 'X', '.', '.', '.', '.'], 'human', 'O', 6)
+# (['O', '.', 'X', '.', 'X', '.', 'O', '.', '.'], 'opponent_13', 'X', 3)
+# (['O', '.', 'X', 'X', 'X', '.', 'O', '.', '.'], 'human', 'O', 5)
+# (['O', '.', 'X', 'X', 'X', 'O', 'O', '.', '.'], 'opponent_13', 'X', 7)
+# (['O', '.', 'X', 'X', 'X', 'O', 'O', 'X', '.'], 'human', 'O', 1)
+# (['O', 'O', 'X', 'X', 'X', 'O', 'O', 'X', '.'], 'opponent_13', 'X', 8)
+
+# game state visualization:
+
+
 
 if __name__ == '__main__':
     # opponent_name = 'opponent_8'
-    test_opponent_name = 'opponent_13'
+    # test_opponent_name = 'opponent_13'
+    # test_opponent_char = 'X'
+
+
+    test_opponent_name = 'long_opponent_1'
     test_opponent_char = 'X'
 
     draw_blank_weights_over_time(test_opponent_name, test_opponent_char)

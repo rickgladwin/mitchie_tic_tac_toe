@@ -147,9 +147,14 @@ CNNs that are overtrained with too many hidden layers.
 ## Next Steps:
 - <span style="color: lightgreen;">✓</span> create visualizations for the state of the AI's training over time
 - create visualizations for the gameplay itself (currently outputs to the console)
-- make two AIs play against each other, and see how their strategies evolve
-- study the ways in which the asymmetries in the weights on the blank config emerge under
+- <span style="color: lightgreen">✓</span> create visualizations for the training and visited board states 
+- <span style="color: cyan;">⧖</span> create visualizations for the trained model itself – a tree in 3D space with
+nodes to represent unique board states and color/opacity for weights
+- <span style="color: lightgreen;">✓</span> make two AIs play against each other, and see how their strategies evolve
+- <span style="color: cyan;">⧖</span> study the ways in which the asymmetries in the weights on the blank config emerge under
 different training conditions, algorithms, and methods
+- create a neural network with board position statuses as inputs, see if there's an architecture/convolutions that
+will result in a successful AI
 
 ## Assets
 assets/antique_game_players_1.jpg

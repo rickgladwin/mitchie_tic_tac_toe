@@ -153,7 +153,7 @@ nodes to represent unique board states and color/opacity for weights
 - <span style="color: lightgreen;">✓</span> make two AIs play against each other, and see how their strategies evolve
 - <span style="color: cyan;">⧖</span> study the ways in which the asymmetries in the weights on the blank config emerge under
 different training conditions, algorithms, and methods
-- create a neural network with board position statuses as inputs, see if there's an architecture/convolutions that
+- create a neural network with board position statuses as inputs, see if there's an ANN architecture that
 will result in a successful AI
 
 ## Assets

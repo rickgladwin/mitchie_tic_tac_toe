@@ -114,7 +114,7 @@ _That said, PRs for additional tests are welcome!_
 * How an AI is trained, and the progression of that training, matters very much with respect to
 the final behaviour of the AI!
 * An AI trained against a random player seems more difficult to beat than an untrained AI, but
-still fees very beatable. It fails to prioritize blocking the human player's win, expecting a random
+still feels very beatable. It fails to prioritize blocking the human player's win, expecting a random
 play and still giving some priority to plays that have led to its own victories.
   * I added a `winning_play()` function to the `gameplay` module, so that once a board state
   exists that would result in a win for the human player, the "generate random" player will

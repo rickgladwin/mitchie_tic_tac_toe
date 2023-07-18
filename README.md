@@ -87,7 +87,8 @@ for longer._
 for this AI automatically.
 * to play against the AI manually, set `generate_random_plays` to `False` in `main.py@main`
 * with `generate_random_plays` set to `True`, you will not be prompted to play. Instead, the system
-will choose a valid move for you at random.
+will choose a valid move for you, either at random, using a function that finds and completes two in a row,
+or using another AI running a learning algorithm.
 * to set how many rounds will be played before the program exits, edit `rounds_to_play` in `main.py@main`. This
 is useful for letting the AI learn rapidly.
 * to turn verbose console display of game progress on or off, edit `display_this_game` in `main.py@main`.

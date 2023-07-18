@@ -156,6 +156,9 @@ nodes to represent unique board states and color/opacity for weights
 different training conditions, algorithms, and methods
 - create a neural network with board position statuses as inputs, see if there's an ANN architecture that
 will result in a successful AI
+- explore generating a decision tree model from the tic-tac-toe AI's training and game history. Explore ways
+to generalize this process for generating decision tree models with human-readable labels and
+visualizations.
 
 ## Assets
 assets/antique_game_players_1.jpg

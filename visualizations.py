@@ -78,8 +78,8 @@ if __name__ == '__main__':
     # test_opponent_char = 'X'
 
 
-    test_opponent_name = 'long_opponent_1'
-    test_opponent_char = 'X'
+    test_opponent_name = 'new_opponent_2'
+    test_opponent_char = 'O'
 
     draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
 

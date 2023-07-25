@@ -18,7 +18,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 400_000
+    rounds_to_play = 100_000
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
@@ -29,13 +29,18 @@ def main():
 
     start_time = datetime.datetime.now()
 
+    opponent_1_goes_first = True
+
     while rounds_to_play > 0:
         game_loop(
             display_game=display_this_game,
             rounds_remaining=rounds_to_play,
-            automate_player_2=generate_random_plays
+            automate_player_2=generate_random_plays,
+            opponent_1_goes_first=opponent_1_goes_first
         )
         rounds_to_play -= 1
+        # alternate starting player
+        opponent_1_goes_first = not opponent_1_goes_first
 
     print('done')
     end_time = datetime.datetime.now()
@@ -43,7 +48,7 @@ def main():
     print(f'time for {total_rounds} rounds: {elapsed_time}')
 
 
-def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
+def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, opponent_1_goes_first=True):
     # print('starting new game...')
 
     # initialize opponent
@@ -77,10 +82,16 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # opponent_name = 'baby_opponent'  # a stupid baby
     # opponent_char = 'X'
 
-    opponent_name = 'long_opponent_1'  # a stupid baby
+    # opponent_name = 'long_opponent_1'  # a stupid baby
+    # opponent_char = 'X'
+    #
+    # opponent_2_name = 'long_opponent_2'  # a stupid baby
+    # opponent_2_char = 'O'
+
+    opponent_name = 'new_opponent_1'  # a stupid baby
     opponent_char = 'X'
 
-    opponent_2_name = 'long_opponent_2'  # a stupid baby
+    opponent_2_name = 'new_opponent_2'  # a stupid baby
     opponent_2_char = 'O'
 
     # opponent_2_name = 'another_baby_opponent'  # another dumb baby
@@ -121,8 +132,6 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     game_thread = []
 
     current_game_is_over = False
-    player_playing_next = opponent_name
-    next_character = opponent_char
 
     if automate_player_2:
         player_2_name = opponent_2_name
@@ -131,10 +140,8 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
         player_2_name = human_name
         player_2_char = human_char
 
-    opponent_1_goes_first = True
-
+    # game loop (each pair of plays)
     while not current_game_is_over:
-
         if opponent_1_goes_first:
             player_1_name = opponent_name
             player_1_char = opponent_char
@@ -142,13 +149,12 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
             player_2_name = opponent_2_name
             player_2_char = opponent_2_char
         else:
-            # TODO: set up alternating first player
             # TODO: accommodate human player in this
-            player_1_name = opponent_name
-            player_1_char = opponent_char
+            player_1_name = opponent_2_name
+            player_1_char = opponent_2_char
 
-            player_2_name = opponent_2_name
-            player_2_char = opponent_2_char
+            player_2_name = opponent_name
+            player_2_char = opponent_char
 
         # opponent plays first
         next_play = choose_next_play(player_1_name, player_1_char, current_board_config)
@@ -205,13 +211,13 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     # check winner, loser, or draw
     if player_wins(current_board_config, player_1_char):
         if display_game:
-            print('You lose.')
+            print(f'{player_1_char} wins.')
         winning_char = player_1_char
         player_1_game_result = GameResults.WIN.value
         player_2_game_result = GameResults.LOSS.value
     if player_wins(current_board_config, player_2_char):
         if display_game:
-            print('You win!')
+            print(f'{player_2_char} wins.')
         winning_char = player_2_char
         player_1_game_result = GameResults.LOSS.value
         player_2_game_result = GameResults.WIN.value
@@ -246,7 +252,6 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
         input('Press any key to continue.')
 
     # end game or start new game
-    # TODO: allow for either ai to play first
     # TODO: ensure game_thread, board_states update, and learning works for ai playing first
     # TODO: display learning progress, game count, game results, etc.
 

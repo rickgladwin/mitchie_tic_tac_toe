@@ -1,6 +1,8 @@
 # Large files (better stored outside GitHub)
 sqlite/long_opponent_1_X.db
 sqlite/long_opponent_2_O.db
+sqlite/new_opponent_1_X.db
+sqlite/new_opponent_2_O.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

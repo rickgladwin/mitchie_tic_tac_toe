@@ -124,8 +124,6 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
     player_playing_next = opponent_name
     next_character = opponent_char
 
-    player_1_name = opponent_name
-    player_1_char = opponent_char
     if automate_player_2:
         player_2_name = opponent_2_name
         player_2_char = opponent_2_char
@@ -133,7 +131,25 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False):
         player_2_name = human_name
         player_2_char = human_char
 
+    opponent_1_goes_first = True
+
     while not current_game_is_over:
+
+        if opponent_1_goes_first:
+            player_1_name = opponent_name
+            player_1_char = opponent_char
+
+            player_2_name = opponent_2_name
+            player_2_char = opponent_2_char
+        else:
+            # TODO: set up alternating first player
+            # TODO: accommodate human player in this
+            player_1_name = opponent_name
+            player_1_char = opponent_char
+
+            player_2_name = opponent_2_name
+            player_2_char = opponent_2_char
+
         # opponent plays first
         next_play = choose_next_play(player_1_name, player_1_char, current_board_config)
         new_board_config = play(next_play, player_1_name, player_1_char, current_board_config)

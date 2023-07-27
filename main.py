@@ -24,8 +24,10 @@ def main():
     # print the game progress and states to the console?
     display_this_game = False
 
-    # generate random plays for the human player?
+    # use an AI or automated strategy in place of the human player?
     generate_random_plays = True
+
+    alternate_who_plays_first = True
 
     start_time = datetime.datetime.now()
 
@@ -39,8 +41,8 @@ def main():
             opponent_1_goes_first=opponent_1_goes_first
         )
         rounds_to_play -= 1
-        # alternate starting player
-        opponent_1_goes_first = not opponent_1_goes_first
+        if alternate_who_plays_first:
+            opponent_1_goes_first = not opponent_1_goes_first
 
     print('done')
     end_time = datetime.datetime.now()
@@ -49,8 +51,6 @@ def main():
 
 
 def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, opponent_1_goes_first=True):
-    # print('starting new game...')
-
     # initialize opponent
     # opponent_name = 'opponent_1'  # trained against human
     # opponent_name = 'opponent_2'  # trained against (mostly) random

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from vpython import *
 
 from database import get_blank_weights, iterable_from_weights, get_blank_weights_from_history, \
     get_seen_states_from_history
@@ -22,14 +23,14 @@ def draw_blank_weights_over_time(opponent_name, opponent_char) -> None:
     ax.plot(x, y)
 
     # draw line of best fit for last N points
-    latest_range = 2000
+    latest_range = 100
     x_best = np.array(list(x)[-latest_range:])
     y_best = np.array(y[-latest_range:])
     a, b = np.polyfit(x=x_best, y=y_best, deg=1)
-    # print(f'last x_best: {x_best[-10:]}')
-    # print(f'last y_best: {y_best[-10:]}')
-    # print(f'a,b: {a}, {b}')
-    plt.plot(x, a*x + b, label=f'slope of last {latest_range} points: {round(a,2)}')
+    print(f'last x_best: {x_best[-10:]}')
+    print(f'last y_best: {y_best[-10:]}')
+    print(f'a,b: {a}, {b}')
+    plt.plot(x, a * x + b, label=f'slope of last {latest_range} points: {round(a, 2)}')
     plt.legend()
 
     plt.show()
@@ -57,6 +58,7 @@ def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
 
     plt.show()
 
+
 # example game_thread:
 # (['.', '.', '.', '.', '.', '.', '.', '.', '.'], 'opponent_13', 'X', 4)
 # (['.', '.', '.', '.', 'X', '.', '.', '.', '.'], 'human', 'O', 0)
@@ -69,6 +71,19 @@ def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
 # (['O', 'O', 'X', 'X', 'X', 'O', 'O', 'X', '.'], 'opponent_13', 'X', 8)
 
 # game state visualization:
+## method 1: draw state space from board_states table - trace vectors forward, starting from blank state (pro: no redundant data, con: slow)
+## method 2: draw state space one play at a time during gameplay - trace vectors at runtime (con: would have to reconstruct games from board_states table in order to build full tree outside of gametime)
+## method 3: add "from states" to board_states table and record during method 1 or 2 (pro: preprocesses visualization data, con: redundant information in db)
+# TODO: implement method 1, then method 3 if it makes sense (method 2 is less useful, and a subfeature of 1)
+# TODO: find a way to add a vector after every play, then update vector weights from the game history at the end of each round.
+# NOTE: Bonus feature: feed the tree drawing function a root state (not necessarily the blank state) so that the subtree can be
+#  can be drawn from there.
+
+def draw_state_tree(root_state, root_position=vector(0,0,0), max_depth=float('inf')) -> None:
+    pass
+    # find root state in db
+    # draw vectors from
+
 
 
 
@@ -77,11 +92,9 @@ if __name__ == '__main__':
     # test_opponent_name = 'opponent_13'
     # test_opponent_char = 'X'
 
-
     test_opponent_name = 'new_opponent_2'
     test_opponent_char = 'O'
 
     draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
 
     draw_seen_states_count_over_time(test_opponent_name, test_opponent_char)
-

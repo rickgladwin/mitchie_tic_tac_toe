@@ -3,7 +3,7 @@ import numpy as np
 from vpython import *
 
 from database import get_blank_weights, iterable_from_weights, get_blank_weights_from_history, \
-    get_seen_states_from_history
+    get_seen_states_from_history, select_board_state
 from settings import settings
 
 
@@ -79,10 +79,22 @@ def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
 # NOTE: Bonus feature: feed the tree drawing function a root state (not necessarily the blank state) so that the subtree can be
 #  can be drawn from there.
 
-def draw_state_tree(root_state, root_position=vector(0,0,0), max_depth=float('inf')) -> None:
-    pass
-    # find root state in db
-    # draw vectors from
+class StateTree:
+    def __init__(self, opponent_name: str, opponent_char: str):
+        self.drawn_state_roots: [str] = []
+        self.opponent_name = opponent_name
+        self.opponent_char = opponent_char
+
+    def draw_state_tree(self, root_state: str, root_position: vector = vector(0,0,0), max_depth = float('inf')) -> None:
+        pass
+        # (memoize)
+        if root_state not in self.drawn_state_roots:
+            self.drawn_state_roots.append(root_state)
+            board_state = select_board_state(self.opponent_name, self.opponent_char, )
+        # find root state in db
+        # (memoized) draw vectors from root_position to each position with a nonzero weight
+        # (memoized) recursive call from each resulting vector as new root
+
 
 
 

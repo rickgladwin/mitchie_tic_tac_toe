@@ -102,7 +102,7 @@ def nexts_from_iterable(nexts):
     return nexts_string
 
 
-def select_board_state(opponent_name, opponent_char, config):
+def select_board_state(opponent_name: str, opponent_char: str, config: iter) -> iter:
     """
     Query board_states table for a board_state with a given config
     :param opponent_name: db identifier for opponent

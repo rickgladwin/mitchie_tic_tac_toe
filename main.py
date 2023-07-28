@@ -113,8 +113,8 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
         create_game_history_table(opponent_2_name, opponent_2_char)
 
     # initialize game with starting game state
-    initial_config = [settings['blank_char']] * 9
-    initial_weights = [settings['init_weight']] * 9
+    initial_config: iter = [settings['blank_char']] * 9
+    initial_weights: iter = [settings['init_weight']] * 9
     initial_next = []
 
     # add initial game state to database

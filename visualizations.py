@@ -116,6 +116,7 @@ class StateTree:
             self.update_biggest_weight(weights)
             for index, weight in enumerate(weights):
                 print(f'{index=} {weight=}')
+                # TODO: draw vectors for nonzero weights
             # (memoized) recursive call from each resulting vector as new root
 
     def update_biggest_weight(self, weights: iter):

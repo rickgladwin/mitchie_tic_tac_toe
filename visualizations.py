@@ -3,7 +3,7 @@ import numpy as np
 from vpython import *
 
 from database import get_blank_weights, iterable_from_weights, get_blank_weights_from_history, \
-    get_seen_states_from_history, select_board_state
+    get_seen_states_from_history, select_board_state, select_board_state_from_string
 from settings import settings
 
 
@@ -84,16 +84,43 @@ class StateTree:
         self.drawn_state_roots: [str] = []
         self.opponent_name = opponent_name
         self.opponent_char = opponent_char
+        self.biggest_weight = 0
+        # index 0..9 matches board position
+        # tuple (x, z) indicates vector multipliers to use depending on board position
+        # e.g.
+        # 0 (top left) -> x = -1, z = -1
+        # 6 (middle right) -> x = 1, z = 0
+        self.position_vector_map = [
+            (-1, -1),
+            (0, -1),
+            (1, -1),
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+            (-1, 1),
+            (0, 1),
+            (1, 1),
+        ]
 
-    def draw_state_tree(self, root_state: str, root_position: vector = vector(0,0,0), max_depth = float('inf')) -> None:
+    def draw_state_tree(self, root_state: str, root_position: vector=vector(0, 0, 0), max_depth=float('inf')) -> None:
         pass
         # (memoize)
         if root_state not in self.drawn_state_roots:
             self.drawn_state_roots.append(root_state)
-            board_state = select_board_state(self.opponent_name, self.opponent_char, )
-        # find root state in db
-        # (memoized) draw vectors from root_position to each position with a nonzero weight
-        # (memoized) recursive call from each resulting vector as new root
+            board_config, weights_string, _ = select_board_state_from_string(self.opponent_name, self.opponent_char, root_state)
+            print(f'{board_config=}, {weights_string=}')
+            print(f'{state_tree.drawn_state_roots=}')
+            # find root state in db
+            # (memoized) draw vectors from root_position to each position with a nonzero weight
+            weights = iterable_from_weights(weights_string)
+            self.update_biggest_weight(weights)
+            for index, weight in enumerate(weights):
+                print(f'{index=} {weight=}')
+            # (memoized) recursive call from each resulting vector as new root
+
+    def update_biggest_weight(self, weights: iter):
+        for weight in weights:
+            self.biggest_weight = max(self.biggest_weight, weight)
 
 
 
@@ -107,6 +134,13 @@ if __name__ == '__main__':
     test_opponent_name = 'new_opponent_2'
     test_opponent_char = 'O'
 
-    draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
+    test_config = 'X...OXO..'
+    test_expected_weights = '0,11,16,7,0,0,0,14,29'
 
-    draw_seen_states_count_over_time(test_opponent_name, test_opponent_char)
+    state_tree = StateTree(test_opponent_name, test_opponent_char)
+    state_tree.draw_state_tree(test_config)
+
+
+    # draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
+
+    # draw_seen_states_count_over_time(test_opponent_name, test_opponent_char)

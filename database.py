@@ -131,6 +131,28 @@ def select_board_state(opponent_name: str, opponent_char: str, config: iter) -> 
 
     return board_state
 
+def select_board_state_from_string(opponent_name: str, opponent_char: str, config: str) -> iter:
+    """
+    Query board_states table for a board_state with a given config in string format
+    :param opponent_name: db identifier for opponent
+    :param opponent_char: char used by opponent
+    :param config: string of board position statuses
+    :return: board_state
+    """
+    conn = create_connection('sqlite/' + opponent_name + '_' + opponent_char + '.db')
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM board_states WHERE config=?", (config,))
+
+    board_state = cur.fetchone()
+
+    if not board_state:
+        return None
+
+    conn.close()
+
+    return board_state
+
 
 create_board_states_table_sql = """
 CREATE TABLE IF NOT EXISTS board_states (

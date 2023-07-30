@@ -114,9 +114,12 @@ class StateTree:
             # (memoized) draw vectors from root_position to each position with a nonzero weight
             weights = iterable_from_weights(weights_string)
             self.update_biggest_weight(weights)
+            print(f'{self.biggest_weight=}')
             for index, weight in enumerate(weights):
                 print(f'{index=} {weight=}')
                 # TODO: draw vectors for nonzero weights
+                # TODO: find an efficient way to determine the biggest weight in the tree after root
+                #  and use that to set the opacity etc. for each branch as it's drawn or redrawn
             # (memoized) recursive call from each resulting vector as new root
 
     def update_biggest_weight(self, weights: iter):

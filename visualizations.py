@@ -85,6 +85,7 @@ class StateTree:
         self.opponent_name = opponent_name
         self.opponent_char = opponent_char
         self.biggest_weight = 0
+        self.dy = 1
         # index 0..9 matches board position
         # tuple (x, z) indicates vector multipliers to use depending on board position
         # e.g.
@@ -118,6 +119,16 @@ class StateTree:
             for index, weight in enumerate(weights):
                 print(f'{index=} {weight=}')
                 # TODO: draw vectors for nonzero weights
+                if weight > 0:
+                    new_root = vector(root_position.x + self.position_vector_map[index][0], root_position.y + self.dy, root_position.z + self.position_vector_map[index][1]),
+                    new_branch = cylinder(pos=root_position,
+                                          axis=new_root,
+                                          color=color.white,
+                                          opacity=1.0)
+                    root_state_iter = list(root_state)
+                    root_state_iter[index] = self.opponent_char
+                    branch_end_state = ''.join(root_state_iter)
+                    self.draw_state_tree(root_state=branch_end_state, root_position=new_root, )
                 # TODO: find an efficient way to determine the biggest weight in the tree after root
                 #  and use that to set the opacity etc. for each branch as it's drawn or redrawn
             # (memoized) recursive call from each resulting vector as new root

@@ -133,7 +133,6 @@ class StateTree:
             print(f'{self.biggest_weight=}')
             for index, weight in enumerate(weights):
                 print(f'{index=} {weight=}')
-                # TODO: draw vectors for nonzero weights
                 if weight > 0:
                     new_x: int = root_position.x + self.position_vector_map[index][0]
                     new_y: int = root_position.y + self.dy
@@ -145,11 +144,14 @@ class StateTree:
                     print(f'{new_root.x=}')
                     print(f'{new_root.y=}')
                     print(f'{new_root.z=}')
+
+                    relative_weight = weight / self.biggest_weight
+
                     new_branch = cylinder(pos=root_position,
                                           axis=new_root,
                                           radius=0.25,
                                           color=color.white,
-                                          opacity=0.6)
+                                          opacity=relative_weight)
                     root_state_iter = list(root_state)
                     # FIXME: It's more complicated than this. Three cases need to be explored (board_states table needs
                     #  to be checked for:
@@ -189,6 +191,9 @@ if __name__ == '__main__':
     state_tree.draw_state_tree(test_config)
 
     print(f'&&& done. &&&')
+
+    while True:
+        rate(60)
 
     # draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
 

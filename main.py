@@ -18,7 +18,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 3
+    rounds_to_play = 5
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?

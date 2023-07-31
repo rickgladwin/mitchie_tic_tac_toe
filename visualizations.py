@@ -86,6 +86,7 @@ class StateTree:
         self.opponent_char = opponent_char
         self.biggest_weight = 0
         self.dy = 10
+        self.horiz_scale = 1
         self.root_radius = 1
         self.branch_radius_ratio = 0.8
         # index 0..9 matches board position
@@ -114,7 +115,6 @@ class StateTree:
             branch_radius = self.root_radius
         # (memoize)
         if root_state not in self.drawn_state_roots:
-            self.drawn_state_roots.append(root_state)
             board_state = select_board_state_from_string(self.opponent_name, self.opponent_char, root_state)
             print(f'### {board_state=}')
             # don't draw a branch for an unseen state
@@ -122,6 +122,7 @@ class StateTree:
                 print(f'### no branch for {root_state}')
                 return None
 
+            self.drawn_state_roots.append(root_state)
             board_config, weights_string, _ = board_state
 
             print(f'{board_config=}, {weights_string=}')
@@ -134,9 +135,9 @@ class StateTree:
             for index, weight in enumerate(weights):
                 print(f'{index=} {weight=}')
                 if weight > 0:
-                    new_x: int = root_position.x + self.position_vector_map[index][0]
+                    new_x: int = (root_position.x + self.position_vector_map[index][0]) * self.horiz_scale
                     new_y: int = root_position.y + self.dy
-                    new_z: int = root_position.z + self.position_vector_map[index][1]
+                    new_z: int = (root_position.z + self.position_vector_map[index][1]) * self.horiz_scale
 
                     new_root = vector(new_x, new_y, new_z)
                     # new_root = vector(1,2,3)
@@ -152,7 +153,8 @@ class StateTree:
                                           radius=0.25,
                                           color=color.white,
                                           opacity=relative_weight)
-                    root_state_iter = list(root_state)
+                    root_state_iter_o = list(root_state)
+                    root_state_iter_x = list(root_state)
                     # FIXME: It's more complicated than this. Three cases need to be explored (board_states table needs
                     #  to be checked for:
                     #  - equal number of X and O? draw with an X and an O in each position (NOTE: two root branches in
@@ -163,13 +165,17 @@ class StateTree:
                     #  Find a way to alternate the character being added and checked? This will avoid needing to
                     #   compare the count of X and O each time.
                     # root_state_iter[index] = self.opponent_char
-                    root_state_iter[index] = 'O'
-                    branch_end_state = ''.join(root_state_iter)
-                    self.draw_state_tree(root_state=branch_end_state, root_position=new_root,
+                    root_state_iter_o[index] = 'O'
+                    branch_end_state_o = ''.join(root_state_iter_o)
+                    self.draw_state_tree(root_state=branch_end_state_o, root_position=new_root,
                                          branch_radius=root_position.y * self.branch_radius_ratio)
                 # TODO: find an efficient way to determine the biggest weight in the tree after root
                 #  and use that to set the opacity etc. for each branch as it's drawn or redrawn
             # (memoized) recursive call from each resulting vector as new root
+                    root_state_iter_x[index] = 'X'
+                    branch_end_state_x = ''.join(root_state_iter_x)
+                    self.draw_state_tree(root_state=branch_end_state_x, root_position=new_root,
+                                         branch_radius=root_position.y * self.branch_radius_ratio)
 
     def update_biggest_weight(self, weights: iter):
         for weight in weights:

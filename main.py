@@ -18,11 +18,11 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 5
+    rounds_to_play = 2000
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
-    display_this_game = True
+    display_this_game = False
 
     # use an AI or automated strategy in place of the human player?
     generate_random_plays = True
@@ -244,7 +244,7 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
         seen_board_states_count_2 = count_seen_states(player_2_name, player_2_char)
         update_game_history(player_2_name, player_2_char, player_2_game_result, blank_weights_2, seen_board_states_count_2)
 
-    if rounds_remaining % 1024 == 0 and not display_game:
+    if rounds_remaining % 256 == 0 and not display_game:
         clear_screen()
         print(f'rounds_remaining: {rounds_remaining} or fewer')
 

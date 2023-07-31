@@ -147,16 +147,19 @@ class StateTree:
                     print(f'{new_root.z=}')
                     new_branch = cylinder(pos=root_position,
                                           axis=new_root,
-                                          radius=1,
+                                          radius=0.25,
                                           color=color.white,
-                                          opacity=1.0)
+                                          opacity=0.6)
                     root_state_iter = list(root_state)
-                    # FIXME: It's more complicated than this. Two cases need to be explored (board_states table needs
+                    # FIXME: It's more complicated than this. Three cases need to be explored (board_states table needs
                     #  to be checked for:
-                    #  equal number of X and O? draw with an X and an O in each position (NOTE: two root branches in
+                    #  - equal number of X and O? draw with an X and an O in each position (NOTE: two root branches in
                     #  order to cover cases where X vs O goes first, without overlapping positions in the tree?
                     #  Can this be done from any root state in the tree?
-                    #  Find a way to alternate the character being added and checked?
+                    #  - more X than O? draw with an O
+                    #  - more O than X? draw with an X
+                    #  Find a way to alternate the character being added and checked? This will avoid needing to
+                    #   compare the count of X and O each time.
                     # root_state_iter[index] = self.opponent_char
                     root_state_iter[index] = 'O'
                     branch_end_state = ''.join(root_state_iter)

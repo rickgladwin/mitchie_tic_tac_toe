@@ -85,13 +85,15 @@ class StateTree:
         self.opponent_name = opponent_name
         self.opponent_char = opponent_char
         self.biggest_weight = 0
-        self.dy = 1
+        self.dy = 10
+        self.root_radius = 1
+        self.branch_radius_ratio = 0.8
         # index 0..9 matches board position
         # tuple (x, z) indicates vector multipliers to use depending on board position
         # e.g.
         # 0 (top left) -> x = -1, z = -1
         # 6 (middle right) -> x = 1, z = 0
-        self.position_vector_map = [
+        self.position_vector_map: list[tuple] = [
             (-1, -1),
             (0, -1),
             (1, -1),
@@ -102,13 +104,26 @@ class StateTree:
             (0, 1),
             (1, 1),
         ]
+        # set up canvas
+        state_tree_scene = canvas(width=1024, height=720, title="State Tree")
 
-    def draw_state_tree(self, root_state: str, root_position: vector=vector(0, 0, 0), max_depth=float('inf')) -> None:
-        pass
+    def draw_state_tree(self, root_state: str, root_position: vector = vector(0, 0, 0), branch_radius: float = None,
+                        max_depth=float('inf')) -> None:
+        print(f'---- draw_state_tree called with {root_state=}, {root_position=}, {branch_radius=} ----')
+        if branch_radius is None:
+            branch_radius = self.root_radius
         # (memoize)
         if root_state not in self.drawn_state_roots:
             self.drawn_state_roots.append(root_state)
-            board_config, weights_string, _ = select_board_state_from_string(self.opponent_name, self.opponent_char, root_state)
+            board_state = select_board_state_from_string(self.opponent_name, self.opponent_char, root_state)
+            print(f'### {board_state=}')
+            # don't draw a branch for an unseen state
+            if board_state is None:
+                print(f'### no branch for {root_state}')
+                return None
+
+            board_config, weights_string, _ = board_state
+
             print(f'{board_config=}, {weights_string=}')
             print(f'{state_tree.drawn_state_roots=}')
             # find root state in db
@@ -120,15 +135,33 @@ class StateTree:
                 print(f'{index=} {weight=}')
                 # TODO: draw vectors for nonzero weights
                 if weight > 0:
-                    new_root = vector(root_position.x + self.position_vector_map[index][0], root_position.y + self.dy, root_position.z + self.position_vector_map[index][1]),
+                    new_x: int = root_position.x + self.position_vector_map[index][0]
+                    new_y: int = root_position.y + self.dy
+                    new_z: int = root_position.z + self.position_vector_map[index][1]
+
+                    new_root = vector(new_x, new_y, new_z)
+                    # new_root = vector(1,2,3)
+                    print(f'{new_root=}')
+                    print(f'{new_root.x=}')
+                    print(f'{new_root.y=}')
+                    print(f'{new_root.z=}')
                     new_branch = cylinder(pos=root_position,
                                           axis=new_root,
+                                          radius=1,
                                           color=color.white,
                                           opacity=1.0)
                     root_state_iter = list(root_state)
-                    root_state_iter[index] = self.opponent_char
+                    # FIXME: It's more complicated than this. Two cases need to be explored (board_states table needs
+                    #  to be checked for:
+                    #  equal number of X and O? draw with an X and an O in each position (NOTE: two root branches in
+                    #  order to cover cases where X vs O goes first, without overlapping positions in the tree?
+                    #  Can this be done from any root state in the tree?
+                    #  Find a way to alternate the character being added and checked?
+                    # root_state_iter[index] = self.opponent_char
+                    root_state_iter[index] = 'O'
                     branch_end_state = ''.join(root_state_iter)
-                    self.draw_state_tree(root_state=branch_end_state, root_position=new_root, )
+                    self.draw_state_tree(root_state=branch_end_state, root_position=new_root,
+                                         branch_radius=root_position.y * self.branch_radius_ratio)
                 # TODO: find an efficient way to determine the biggest weight in the tree after root
                 #  and use that to set the opacity etc. for each branch as it's drawn or redrawn
             # (memoized) recursive call from each resulting vector as new root
@@ -138,23 +171,21 @@ class StateTree:
             self.biggest_weight = max(self.biggest_weight, weight)
 
 
-
-
-
 if __name__ == '__main__':
     # opponent_name = 'opponent_8'
     # test_opponent_name = 'opponent_13'
     # test_opponent_char = 'X'
 
-    test_opponent_name = 'new_opponent_2'
-    test_opponent_char = 'O'
+    test_opponent_name = 'new_opponent_1'
+    test_opponent_char = 'X'
 
-    test_config = 'X...OXO..'
+    test_config = '.........'
     test_expected_weights = '0,11,16,7,0,0,0,14,29'
 
     state_tree = StateTree(test_opponent_name, test_opponent_char)
     state_tree.draw_state_tree(test_config)
 
+    print(f'&&& done. &&&')
 
     # draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
 

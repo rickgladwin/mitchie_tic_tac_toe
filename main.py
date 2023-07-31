@@ -18,11 +18,11 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 100_000
+    rounds_to_play = 3
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
-    display_this_game = False
+    display_this_game = True
 
     # use an AI or automated strategy in place of the human player?
     generate_random_plays = True

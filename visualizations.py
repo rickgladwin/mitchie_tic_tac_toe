@@ -146,6 +146,9 @@ class StateTree:
                     print(f'{new_root.y=}')
                     print(f'{new_root.z=}')
 
+                    # TODO: use a different function for relative weight, either only taking
+                    #  into account the current play number in the game, OR some mix of the
+                    #  current play number weights and the absolute biggest weight.
                     relative_weight = weight / self.biggest_weight
 
                     new_branch = cylinder(pos=root_position,

@@ -2,60 +2,54 @@ import math
 from selections import range_starts, select_move
 
 
-def test_builds_with_basic_weights():
-    test_weights = [50, 50]
-    expected_range_starts = [1, 51]
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
+class TestRangeStarts:
+    def test_builds_with_basic_weights(self):
+        test_weights = [50, 50]
+        expected_range_starts = [1, 51]
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
+    def test_builds_with_basic_weights_using_tuple(self):
+        test_weights = (50, 50)
+        expected_range_starts = [1, 51]
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
-def test_builds_with_basic_weights_using_tuple():
-    test_weights = (50, 50)
-    expected_range_starts = [1, 51]
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
+    def test_builds_with_weights_including_zeroes(self):
+        test_weights = [50, 0, 10, 0, 50]
+        expected_range_starts = [1, 51, 51, 61, 61]
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
+    def test_builds_with_weights_including_trailing_zero(self):
+        test_weights = [50, 0, 10, 0, 50, 5, 0]
+        expected_range_starts = [1, 51, 51, 61, 61, 111, 116]
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
-def test_builds_with_weights_including_zeroes():
-    test_weights = [50, 0, 10, 0, 50]
-    expected_range_starts = [1, 51, 51, 61, 61]
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
+    def test_builds_with_weights_including_leading_zero(self):
+        test_weights = [0, 0, 50, 0, 10, 0, 0, 50, 5, 0, 0]
+        expected_range_starts = [1, 1, 1, 51, 51, 61, 61, 61, 111, 116, 116]
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
+    def test_builds_with_all_zeros(self):
+        test_weights = [0, 0, 0, 0, 0]
+        expected_range_starts = [1, 1, 1, 1, 1]
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
-def test_builds_with_weights_including_trailing_zero():
-    test_weights = [50, 0, 10, 0, 50, 5, 0]
-    expected_range_starts = [1, 51, 51, 61, 61, 111, 116]
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
+    def test_builds_with_empty_weights(self):
+        test_weights = []
+        expected_range_starts = []
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
-
-def test_builds_with_weights_including_leading_zero():
-    test_weights = [0, 0, 50, 0, 10, 0, 0, 50, 5, 0, 0]
-    expected_range_starts = [1, 1, 1, 51, 51, 61, 61, 61, 111, 116, 116]
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
-
-
-def test_builds_with_all_zeros():
-    test_weights = [0, 0, 0, 0, 0]
-    expected_range_starts = [1, 1, 1, 1, 1]
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
-
-
-def test_builds_with_empty_weights():
-    test_weights = []
-    expected_range_starts = []
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
-
-
-def test_builds_with_empty_weights_using_tuple():
-    test_weights = ()
-    expected_range_starts = []
-    result = range_starts(test_weights)
-    assert (result == expected_range_starts)
+    def test_builds_with_empty_weights_using_tuple(self):
+        test_weights = ()
+        expected_range_starts = []
+        result = range_starts(test_weights)
+        assert (result == expected_range_starts)
 
 
 class TestMoveSelection:
@@ -127,7 +121,7 @@ class TestMoveSelection:
             assert (result != 3)
 
     def test_selects_moves_with_rates_matching_weights(self):
-        test_weights = [0, 0, 50, 24, 0, 50, 0, 10, 5, 60, 0]
+        test_weights = [0, 0, 50, 24, 0, 50, 0, 10, 5, 60, 7]
         results = [0] * len(test_weights)
         total_trials = 1000
         print(f'\ntotal_trials: {total_trials}')

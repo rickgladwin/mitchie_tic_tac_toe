@@ -81,7 +81,10 @@ def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
 
 class StateTree:
     def __init__(self, opponent_name: str, opponent_char: str):
-        self.drawn_state_roots: [str] = []
+        # TODO: update uses of drawn_state_roots to record 3D position
+        # TODO: rename this to drawn_states? Not just roots (use this data
+        #  for node position memoization)
+        self.drawn_state_roots: {str: vector} = {}
         self.opponent_name = opponent_name
         self.opponent_char = opponent_char
         self.biggest_weight = 0
@@ -114,7 +117,8 @@ class StateTree:
         if branch_radius is None:
             branch_radius = self.root_radius
         # (memoize)
-        if root_state not in self.drawn_state_roots:
+        print(f'self.drawn_state_roots: {self.drawn_state_roots}')
+        if root_state not in self.drawn_state_roots.keys():
             board_state = select_board_state_from_string(self.opponent_name, self.opponent_char, root_state)
             print(f'### {board_state=}')
             # don't draw a branch for an unseen state
@@ -122,7 +126,9 @@ class StateTree:
                 print(f'### no branch for {root_state}')
                 return None
 
-            self.drawn_state_roots.append(root_state)
+            # FIXME: record each branch's state and position, not just the roots,
+            #  so we can use this data for un-branching nodes for common states
+            self.drawn_state_roots[root_state] = root_position
             board_config, weights_string, _ = board_state
 
             print(f'{board_config=}, {weights_string=}')

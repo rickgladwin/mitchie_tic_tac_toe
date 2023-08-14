@@ -106,7 +106,7 @@ class StateTree:
             (1, 1),
         ]
         # set up canvas
-        state_tree_scene = canvas(width=1024, height=720, title="State Tree")
+        canvas(width=1024, height=500, title='State Tree', caption='caption')
 
     def draw_state_tree(self, root_state: str, root_position: vector = vector(0, 0, 0), branch_radius: float = None,
                         max_depth=float('inf')) -> None:
@@ -149,7 +149,7 @@ class StateTree:
                     # TODO: use a different function for relative weight, either only taking
                     #  into account the current play number in the game, OR some mix of the
                     #  current play number weights and the absolute biggest weight.
-                    relative_weight = weight / self.biggest_weight
+                    relative_weight = max(weight / self.biggest_weight, 0.25)
 
                     new_branch = cylinder(pos=root_position,
                                           axis=new_root,
@@ -172,6 +172,7 @@ class StateTree:
                     branch_end_state_o = ''.join(root_state_iter_o)
                     self.draw_state_tree(root_state=branch_end_state_o, root_position=new_root,
                                          branch_radius=root_position.y * self.branch_radius_ratio)
+                    label(pos=new_root, text=branch_end_state_o, xoffset=0.5, yoffset=0.5, box=False, opacity=0)
                 # TODO: find an efficient way to determine the biggest weight in the tree after root
                 #  and use that to set the opacity etc. for each branch as it's drawn or redrawn
             # (memoized) recursive call from each resulting vector as new root
@@ -179,6 +180,7 @@ class StateTree:
                     branch_end_state_x = ''.join(root_state_iter_x)
                     self.draw_state_tree(root_state=branch_end_state_x, root_position=new_root,
                                          branch_radius=root_position.y * self.branch_radius_ratio)
+                    # label(pos=new_root, text=branch_end_state_x, xoffset=0.5, yoffset=0.5, box=False, opacity=0)
 
     def update_biggest_weight(self, weights: iter):
         for weight in weights:

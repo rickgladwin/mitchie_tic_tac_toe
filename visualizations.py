@@ -81,7 +81,7 @@ def draw_seen_states_count_over_time(opponent_name, opponent_char) -> None:
 
 class StateTree:
     def __init__(self, opponent_name: str, opponent_char: str):
-        # TODO: update uses of drawn_state_roots to record 3D position
+        # TODO: update uses of drawn_states to record 3D position
         self.drawn_states: {str: vector} = {}
         self.opponent_name = opponent_name
         self.opponent_char = opponent_char

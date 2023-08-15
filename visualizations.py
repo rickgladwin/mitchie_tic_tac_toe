@@ -155,6 +155,11 @@ class StateTree:
                     #  current play number weights and the absolute biggest weight.
                     relative_weight = max(weight / self.biggest_weight, 0.25)
 
+                    # TODO: find a way to represent branches that represent state transitions that
+                    #  don't involve decisions on behalf of the represented player (i.e. the other
+                    #  player plays, which creates branches from the current state, but the branches
+                    #  don't have a weight since they're not decisions. Maybe use a colour for decision
+                    #  branches and grey/translucent for decision-free transitions?
                     new_branch = cylinder(pos=root_position,
                                           axis=new_root,
                                           radius=0.25,

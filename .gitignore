@@ -3,6 +3,12 @@ sqlite/long_opponent_1_X.db
 sqlite/long_opponent_2_O.db
 sqlite/new_opponent_1_X.db
 sqlite/new_opponent_2_O.db
+sqlite/ally_mcbeans_X.db
+sqlite/cat_blevins_O.db
+sqlite/opponent_11_O.db
+sqlite/opponent_12_O.db
+sqlite/opponent_13_O.db
+sqlite/opponent_14_O.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -18,19 +18,28 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 2000
+    rounds_to_play = 200_000
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
+    # this will show more information, but printing slows the process.
+    # if training AI players against each other, it is faster to set this to False.
+    # if set to false, the console will display a periodic update on the remaining
+    # number of rounds.
     display_this_game = False
 
     # use an AI or automated strategy in place of the human player?
+    # generate_random_plays = True will use a nonhuman player
+    # the strategy used by the nonhuman player is determined in the choose_next_play() call
     generate_random_plays = True
 
     alternate_who_plays_first = True
 
     start_time = datetime.datetime.now()
 
+    # Determine who plays first in a new set of rounds
+    # This value will alternate if alternate_who_plays_first is True and there are
+    # multiple rounds
     opponent_1_goes_first = True
 
     while rounds_to_play > 0:
@@ -51,6 +60,12 @@ def main():
 
 
 def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, opponent_1_goes_first=True):
+    # To create a new AI player with a blank brain state (no information about game states
+    # or successful/unsuccessful plays based on each state), add a new 'opponent_name' value
+    # below. The system will automatically create a new SQLite database for any name it doesn't
+    # recognize when the game initializes.
+    # When training AI players against each other, declare a value for 'opponent_2_name' as well.
+    # To reuse existing opponents, uncomment one of the existing 'opponent_name' declarations.
     # initialize opponent
     # opponent_name = 'opponent_1'  # trained against human
     # opponent_name = 'opponent_2'  # trained against (mostly) random
@@ -76,7 +91,7 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
     # opponent_name = 'opponent_13'  # trained against fresh opponent AI
     # opponent_char = 'X'
 
-    # opponent_2_name = 'opponent_14'  # trained against fresh opponent AI
+    # opponent_2_name = 'opponent_14'  # trained against fresh opponent AI (126_000 games)
     # opponent_2_char = 'O'
 
     # opponent_name = 'baby_opponent'  # a stupid baby
@@ -88,14 +103,20 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
     # opponent_2_name = 'long_opponent_2'  # a stupid baby
     # opponent_2_char = 'O'
 
-    opponent_name = 'new_opponent_1'  # a stupid baby
-    opponent_char = 'X'
+    # opponent_name = 'new_opponent_1'  # a stupid baby
+    # opponent_char = 'X'
 
-    opponent_2_name = 'new_opponent_2'  # a stupid baby
-    opponent_2_char = 'O'
+    # opponent_2_name = 'new_opponent_2'  # a stupid baby
+    # opponent_2_char = 'O'
 
     # opponent_2_name = 'another_baby_opponent'  # another dumb baby
     # opponent_2_char = 'O'
+
+    opponent_name = 'ally_mcbeans'
+    opponent_char = 'X'
+
+    opponent_2_name = 'cat_blevins'
+    opponent_2_char = 'O'
 
     # initialize human
     human_name = 'human'  # you, you friggin champion

@@ -197,24 +197,54 @@ class StateTree:
 
 
 if __name__ == '__main__':
-    # opponent_name = 'opponent_8'
+    # select opponent dataset and character for visualizations
+    # NOTE: the test opponent used here must have a game_history table in their database
+    # in order to run draw_blank_weights_over_time()
+    # (earlier versions of this repo did not record game history)
+    # NOTE: the test opponent used here must have a 'seen_states_count' column in its
+    # game_history table in order to run draw_seen_states_over_time()
     # test_opponent_name = 'opponent_13'
-    # test_opponent_char = 'X'
+    # test_opponent_name = 'new_opponent_1'
+    # test_opponent_name = 'opponent_12'
+    # test_opponent_name = 'opponent_14'
+    # test_opponent_name = 'baby_opponent'
+    test_opponent_name = 'ally_mcbeans'
 
-    test_opponent_name = 'new_opponent_1'
     test_opponent_char = 'X'
+    # test_opponent_char = 'O'
 
+    # if drawing state tree, declare the identifier for the root board state
+    # for the tree. E.g. '.........' is the starting game state.
     test_config = '.........'
     test_expected_weights = '0,11,16,7,0,0,0,14,29'
 
-    state_tree = StateTree(test_opponent_name, test_opponent_char)
-    state_tree.draw_state_tree(test_config)
+    # draw the state tree for a given AI brain state
+    # state_tree = StateTree(test_opponent_name, test_opponent_char)
+    # state_tree.draw_state_tree(test_config)
+    # while True:
+    #     rate(60)
+
+    # Plot the sum of weights in the starting game state over the number of games
+    # This is a proxy for how "trained" the AI is.
+    # The plot includes a linear regression line showing the increase in weight added to any
+    # blank game state position over the last 100 games on the plot.
+    # The expected parameters for this line will depend on the weights set in settings.py
+    # For example, we expect the weights in the base state to change every 2 games if the players alternated
+    # who goes first during training (since this state will be updated only if the given opponent goes first), and should increase by 1 each time
+    # if the change in weight after a draw is set to 1.
+    # So given a draw delta of 1, we expect the slope of the line to approach 0.5 for alternating play
+    # or 1 if the given opponent played first every time.
+    # Tic-Tac-Toe is a solved game that results in draws if both players are playing optimally.
+    # high-count example: opponent_13_X
+    # low-count example: baby_opponent_X
+    draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
+
+    # Plot the number of unique game states the AI has seen over the number of games
+    # We expect this number to follow something like a logarithmic growth curve, but with an
+    # actual upper limit imposed by the finite number of game states that can be visited
+    # while playing the game.
+    # high-count example: opponent_14_O
+    # low-count example: baby_opponent_X
+    draw_seen_states_count_over_time(test_opponent_name, test_opponent_char)
 
     print(f'&&& done. &&&')
-
-    while True:
-        rate(60)
-
-    # draw_blank_weights_over_time(test_opponent_name, test_opponent_char)
-
-    # draw_seen_states_count_over_time(test_opponent_name, test_opponent_char)

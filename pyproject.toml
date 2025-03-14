@@ -2,8 +2,12 @@
 name = "mitchie-tic-tac-toe"
 version = "0.1.0"
 description = "Add your description here"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.10.1",
+    "numpy>=2.2.3",
+    "vpython>=7.6.5",
+]
 
 [dependency-groups]
 dev = [

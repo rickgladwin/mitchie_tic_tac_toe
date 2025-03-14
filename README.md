@@ -49,16 +49,23 @@ identifier in the database.
 ### Prerequisites
 * Python 3 (>= 3.11 recommended)
 * conda (optional but recommended)
+OR
+* uv
 
 ### Install
 * clone this repo
 * create a conda environment
 ```conda create --name ai_ml -f environment.yml```
+OR
+* create a virtualenv environment using uv
+```uv venv --python 3.11```
 
 ## Usage
 ### Run the game
 * activate the environment
   ```conda activate ai_ml```
+OR
+  ```source .venv/bin/activate```
 * determine the way the game will run (waiting for human player input, running/training
 against an automated algorithm, number of rounds, etc. – See Settings below) by updating
 the relevant parts of `main.py`

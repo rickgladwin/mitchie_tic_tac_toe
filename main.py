@@ -18,7 +18,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 200_000
+    rounds_to_play = 500_000
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
@@ -112,11 +112,16 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
     # opponent_2_name = 'another_baby_opponent'  # another dumb baby
     # opponent_2_char = 'O'
 
-    opponent_name = 'ally_mcbeans'
-    opponent_char = 'X'
+    # opponent_name = 'ally_mcbeans'
+    # opponent_char = 'X'
 
-    opponent_2_name = 'cat_blevins'
+    # opponent_2_name = 'cat_blevins'
+    opponent_2_name = 'long_trainer_2'
     opponent_2_char = 'O'
+
+    # opponent_name = 'jubal_early'
+    opponent_name = 'long_trainer_1'
+    opponent_char = 'X'
 
     # initialize human
     human_name = 'human'  # you, you friggin champion

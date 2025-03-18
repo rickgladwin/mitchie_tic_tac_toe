@@ -1,6 +1,7 @@
 import datetime
 import random
 import time
+import emoji
 from enum import Enum
 
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
@@ -45,7 +46,7 @@ def main():
 
     # add a delay of x seconds before the display is refreshed
     # after each play (0 for no delay)
-    delay_before_display_refresh: float = 0.75
+    delay_before_display_refresh: float = 0.2
 
     while rounds_to_play > 0:
         game_loop(
@@ -214,7 +215,8 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
         if game_is_over(current_board_config):
             current_game_is_over = True
             if display_game:
-                print('@@@ Game over @@@')
+                checkered_flag = emoji.emojize(':chequered_flag:')
+                print(f"{checkered_flag} Game over {checkered_flag}")
             break
 
         if automate_player_2:
@@ -243,7 +245,9 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
         # check for a win or draw
         if game_is_over(current_board_config):
             if display_game:
-                print('@@@ Game over @@@')
+                checkered_flag = emoji.emojize(':chequered_flag:')
+                print(f"{checkered_flag} Game over {checkered_flag}")
+                # print('@@@ Game over @@@')
             current_game_is_over = True
 
     winning_char = None

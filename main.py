@@ -1,5 +1,6 @@
 import datetime
 import random
+import time
 from enum import Enum
 
 from database import create_connection, create_board_states_table, insert_board_state, board_state_from_iterables, \
@@ -18,7 +19,7 @@ class GameResults(str, Enum):
 
 
 def main():
-    rounds_to_play = 500_000
+    rounds_to_play = 100
     total_rounds = rounds_to_play
 
     # print the game progress and states to the console?
@@ -26,7 +27,7 @@ def main():
     # if training AI players against each other, it is faster to set this to False.
     # if set to false, the console will display a periodic update on the remaining
     # number of rounds.
-    display_this_game = False
+    display_this_game = True
 
     # use an AI or automated strategy in place of the human player?
     # generate_random_plays = True will use a nonhuman player
@@ -42,12 +43,17 @@ def main():
     # multiple rounds
     opponent_1_goes_first = True
 
+    # add a delay of x seconds before the display is refreshed
+    # after each play (0 for no delay)
+    delay_before_display_refresh: float = 0.75
+
     while rounds_to_play > 0:
         game_loop(
             display_game=display_this_game,
             rounds_remaining=rounds_to_play,
             automate_player_2=generate_random_plays,
-            opponent_1_goes_first=opponent_1_goes_first
+            opponent_1_goes_first=opponent_1_goes_first,
+            display_sleep=delay_before_display_refresh
         )
         rounds_to_play -= 1
         if alternate_who_plays_first:
@@ -59,7 +65,7 @@ def main():
     print(f'time for {total_rounds} rounds: {elapsed_time}')
 
 
-def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, opponent_1_goes_first=True):
+def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, opponent_1_goes_first=True, display_sleep=0.0):
     # To create a new AI player with a blank brain state (no information about game states
     # or successful/unsuccessful plays based on each state), add a new 'opponent_name' value
     # below. The system will automatically create a new SQLite database for any name it doesn't
@@ -116,11 +122,13 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
     # opponent_char = 'X'
 
     # opponent_2_name = 'cat_blevins'
-    opponent_2_name = 'long_trainer_2'
+    # opponent_2_name = 'long_trainer_2'
+    opponent_2_name = 'short_trainer_2'
     opponent_2_char = 'O'
 
     # opponent_name = 'jubal_early'
-    opponent_name = 'long_trainer_1'
+    # opponent_name = 'long_trainer_1'
+    opponent_name = 'short_trainer_1'
     opponent_char = 'X'
 
     # initialize human
@@ -168,6 +176,10 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
 
     # game loop (each pair of plays)
     while not current_game_is_over:
+
+        # uncomment to throttle the frequency of plays
+        # time.sleep(0.75)
+
         if opponent_1_goes_first:
             player_1_name = opponent_name
             player_1_char = opponent_char
@@ -192,6 +204,7 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
         current_board_config = new_board_config
 
         if display_game:
+            time.sleep(display_sleep)
             clear_screen()
             print_board_simple(current_board_config)
             print_game_thread(game_thread)
@@ -221,6 +234,7 @@ def game_loop(display_game=False, rounds_remaining=1, automate_player_2=False, o
         current_board_config = new_board_config
 
         if display_game:
+            time.sleep(display_sleep)
             clear_screen()
             print_board_simple(current_board_config)
             print_game_thread(game_thread)

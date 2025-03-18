@@ -209,7 +209,8 @@ if __name__ == '__main__':
     # test_opponent_name = 'opponent_14'
     # test_opponent_name = 'baby_opponent'
     # test_opponent_name = 'ally_mcbeans'
-    test_opponent_name = 'jubal_early'
+    # test_opponent_name = 'jubal_early'
+    test_opponent_name = 'short_trainer_1'
 
     test_opponent_char = 'X'
     # test_opponent_char = 'O'
